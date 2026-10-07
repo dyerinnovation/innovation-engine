@@ -2,10 +2,10 @@
   "name": "tpm",
   "displayName": "Technical Project Manager",
   "version": "0.1.0",
-  "description": "Skills for running the work: a live sprint board, paste-to-evidence feedback triage, and one tracked list of actions only a person can do.",
+  "description": "Skills for running the work: a live sprint board, paste-to-evidence feedback triage, one tracked list of actions only a person can do, PRDs with a linter, a release ladder, and architecture diagrams.",
   "author": { "name": "Dyer Innovation Station L.L.C.", "url": "https://innovation.dyer-capital.com" },
   "homepage": "https://innovation.dyer-capital.com/skills/",
   "repository": "https://github.com/dyerinnovation/innovation-engine",
   "license": "MIT",
-  "keywords": ["project-management", "sprint", "triage", "tracking"]
+  "keywords": ["project-management", "sprint", "triage", "tracking", "prd", "releases", "diagrams"]
 }

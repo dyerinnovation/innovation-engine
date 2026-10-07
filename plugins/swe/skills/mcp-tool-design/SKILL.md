@@ -32,7 +32,7 @@ Write these down in one line each. If any line is hard to write, the tool is not
 ## Step 2: Name and describe it for the model
 
 - **Name**: `verb_object` in snake case, scoped with a short server prefix when the host
-  shows many servers side by side (`tasks_list`, `tasks_delete`). Stable once shipped:
+  shows many servers side by side (`acme_list_tasks`, `acme_delete_task`). Stable once shipped:
   renaming breaks every prompt and skill that mentions it.
 - **Title**: a short human label for the host UI ("Delete a task").
 - **Description**, in this order:

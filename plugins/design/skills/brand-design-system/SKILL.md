@@ -25,6 +25,8 @@ lowercase kebab-case. Start from the skeletons in `template/`.
 | `SKILL.md` | The brand guide, from `template/brand-guide-template.md`: frontmatter with name, description and triggers, then 1. Color tokens (hex, rgb, when to use, an accent rationing rule), 2. Type system, 3. Layout and spacing, 4. Voice and tone, 5. Brand anti-patterns (a numbered list a reviewer can apply word for word), 6. Logo and wordmark usage (evoke, never reproduce), 7. How to apply, and Sources (cited URLs and date, with anything approximated flagged). |
 | `preview.html` | A self-contained specimen: color swatches with hex labels, the type scale in the brand stacks, and a sample card with a heading, body text, a chip, a link and a primary button, all styled with `var(--...)` tokens. |
 
+Copy the folder to `.claude/skills/<slug>-design-system/` to use the guide as a skill.
+
 ## Procedure
 
 1. **Research the public brand, official sources first.**

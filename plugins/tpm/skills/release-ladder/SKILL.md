@@ -118,7 +118,7 @@ git tag -a rc-0.7.0 -m "rc-0.7.0: saved searches"
 git push origin rc-0.7.0
 ```
 
-Tags are immutable. If a candidate fails after tagging (a flaky test, a bad deploy), fix it
+Treat pushed tags as immutable. If a candidate fails after tagging (a flaky test, a bad deploy), fix it
 and cut `rc-0.7.1` or a suffixed candidate; never delete and recreate a pushed tag.
 
 Rollback is a traffic shift to the previous version or a new patch tag pointing at a known

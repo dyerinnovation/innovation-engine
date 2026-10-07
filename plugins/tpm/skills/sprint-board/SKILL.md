@@ -5,7 +5,7 @@ description: Create and keep current a live, database-backed Agile board page (c
 
 # Sprint board
 
-A private Claude artifact that shows lane progress as an Agile board. The page is static
+A private Claude artifact that shows lane progress as an Agile board (a lane is one agent's stream of work). The page is static
 HTML; all content lives in the artifact's shared database, so Claude moves cards with
 database writes (the `ArtifactData` tool) and never republishes the page to change content.
 

@@ -1,6 +1,6 @@
 ---
 name: builder-reviewer-loop
-description: Run any non-trivial change as a builder agent plus an independent reviewer agent, with a visual check switched on whenever the change has a UI. The reviewer re-runs the checks itself and, for UI work, takes its own screenshots and compares them to the design. Triggers on "builder reviewer", "build and review", "review loop", "visual validation", "UI port", "check it matches the design", or planning a wave of changes where passing tests alone is not enough evidence.
+description: Run any non-trivial change as a builder agent plus an independent reviewer agent, with a visual check switched on whenever the change has a UI. The reviewer re-runs the checks itself and, for UI work, takes its own screenshots and compares them to the design. Triggers on "builder reviewer", "build and review", "review loop", "UI port", "check it matches the design", or planning a wave of changes where passing tests alone is not enough evidence.
 ---
 
 # Builder and reviewer loop
@@ -47,6 +47,7 @@ touches the same area.
   1440 px), in light and dark themes if the product has both.
 - Save screenshots to files so the reviewer can find the builder's set and compare its own.
 - Browser extension popups in screenshots are noise, not drift.
+- For the step-by-step walk and report, use `swe:ui-test-walk`.
 
 ## Anti-patterns
 

@@ -61,7 +61,8 @@ The `tpm` plugin also ships the `feedback-triage` filer agent.
 - The session-post-mortem hook needs `bash`; `jq` is used when present, with a fallback
   when it is not.
 - `sprint-board` publishes a Claude artifact with a shared database, so it needs a
-  Claude account with artifacts available.
+  Claude account with artifacts available. The database-backed page option of
+  `human-actions` needs Claude artifacts too.
 
 ## Contributing
 

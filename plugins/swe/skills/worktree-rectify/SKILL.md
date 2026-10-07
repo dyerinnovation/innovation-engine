@@ -40,9 +40,10 @@ reports, or a path the user gives.
 
 ## 3. Triage each finding
 
-- **Commit and push**: clearly part of current or finished work. Stage files by name
-  (never `git add -A`), commit with the usual co-author trailer, push, and backfill the
-  commit SHA on the matching item in your issue tracker.
+- **Commit and push**: clearly part of current or finished work. List the recovered
+  commits for the user and push only after their yes. Stage files by name (never
+  `git add -A`), commit following the repo's commit conventions, then backfill the commit
+  SHA on the matching item in your issue tracker.
 - **Park**: real work that is not ready. `git stash push -m "wip:<item>"` plus a follow-up
   item in your issue tracker so it is not forgotten.
 - **Discard**: only with the user's explicit yes. Never auto-discard.

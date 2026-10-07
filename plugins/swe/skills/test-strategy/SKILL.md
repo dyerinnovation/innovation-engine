@@ -50,7 +50,7 @@ Rules of thumb:
 Each acceptance criterion gets exactly one tag:
 
 - `ci`: an automated test or scripted probe proves it. Name the test (`path::test_name`).
-- `rubric`: a blocking criterion in an evaluation rubric proves it. Name the criterion.
+- `rubric:<id>`: a blocking criterion in an evaluation rubric proves it. Name the criterion.
 - `human`: it needs a person in a walk. Phrase it as something a person can see.
 
 If you cannot name the covering test, the criterion is not covered. Tag it `human` or write
@@ -133,5 +133,5 @@ test or the system, never as weather.
 ## Output
 
 When asked for a test plan, return a short table: risk, layer, test name or file, gate
-(pre-merge, post-merge, release), and tag (`ci`, `rubric`, `human`). Flag any criterion with
+(pre-merge, post-merge, release), and tag (`ci`, `rubric:<id>`, `human`). Flag any criterion with
 no covering test.

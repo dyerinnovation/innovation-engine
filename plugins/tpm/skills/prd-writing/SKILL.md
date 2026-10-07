@@ -70,8 +70,14 @@ conscious choice.
 
 One row per requirement: a short claim (about 30 words or fewer), a Where cell with the
 `path:line` it changes or extends, and a work bucket that tells the planner how it can be
-parallelized (research spike, isolated code, overlap risk, shippable feature, infra
-bootstrap). Requirement granularity is the sprint plan; get it right here.
+parallelized:
+
+- **Research spike**: output is a design doc, no code.
+- **Isolated code**: a change in files no other open work touches.
+- **Overlap risk**: touches a file other open work also touches.
+- **Shippable feature**: a user-visible slice across backend and frontend.
+- **Infra bootstrap**: needs credentials or setup only a person can do.
+ Requirement granularity is the sprint plan; get it right here.
 
 ## Step 7: Edge cases, then acceptance criteria
 
@@ -104,7 +110,7 @@ from requirements, each linking back to the PRD.
 ## Step 9: Lint
 
 ```bash
-python3 scripts/lint_prd.py <your-prd>.md
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/prd-writing/scripts/lint_prd.py" <your-prd>.md
 ```
 
 It fails on: a requirement without `path:line`, an open decision without a default, a
@@ -121,7 +127,7 @@ Hand the draft to the decider. Do not create tickets or start builders until the
 - Add the release to the master ladder if it is new (release-ladder skill).
 - Render the PRD if your project keeps a human reading copy beside the markdown, and keep
   the render in step with its source.
-- For shippable-feature lanes, the builder may start with a build plan that cites the PRD's
+- For shippable-feature lanes (a lane is one agent's stream of work), the builder may start with a build plan that cites the PRD's
   requirement ids, and the reviewer checks the `path:line` targets still hold.
 
 ## Copy rules

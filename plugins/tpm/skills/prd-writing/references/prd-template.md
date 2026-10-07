@@ -2,7 +2,7 @@
 
 - **Owner:** <name or role>
 - **Status:** draft
-- **Release:** <version on the ladder, e.g. 0.7.0>
+- **Release:** <version on the ladder, e.g. rc-0.7.0>
 - **Updated:** <YYYY-MM-DD>
 - **Code read at:** <repo> <short sha>; <repo> <short sha>
 - **Parent docs:** <vision doc>, <master PRD and decision ledger>

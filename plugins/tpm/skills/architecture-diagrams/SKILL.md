@@ -84,7 +84,7 @@ views are updated when that release ships.
 
 ## Exporting draw.io
 
-Use `scripts/export-drawio.sh` from the diagrams folder. It exports each `.drawio` to an SVG
+Run `"${CLAUDE_PLUGIN_ROOT}/skills/architecture-diagrams/scripts/export-drawio.sh"` from the diagrams folder. It exports each `.drawio` to an SVG
 beside it and pins the SVG to a light canvas. Without the pin, draw.io's export flips only
 the background in a dark-mode browser and leaves light fills, which gives white text on
 white boxes. If the embedding page supports dark mode, keep the diagram on a light card

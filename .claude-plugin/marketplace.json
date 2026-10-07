@@ -6,13 +6,13 @@
     {
       "name": "swe",
       "source": "./plugins/swe",
-      "description": "Software engineer: agent-model-routing, builder-reviewer-loop, worktree-rectify, session-post-mortem.",
+      "description": "Software engineer: agent-model-routing, builder-reviewer-loop, worktree-rectify, session-post-mortem, mcp-tool-design, test-strategy, ui-test-walk.",
       "category": "development"
     },
     {
       "name": "tpm",
       "source": "./plugins/tpm",
-      "description": "Technical project manager: sprint-board, feedback-triage, human-actions.",
+      "description": "Technical project manager: sprint-board, feedback-triage, human-actions, prd-writing, release-ladder, architecture-diagrams.",
       "category": "productivity"
     },
     {

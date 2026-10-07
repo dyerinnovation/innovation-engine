@@ -1,6 +1,6 @@
 ---
 name: ui-test-walk
-description: Walk a UI change in a real browser, by a person or an agent, and produce a findings report. Writes click-through steps with expected results, runs them at phone width (390 px) and desktop width (1440 px) in light and dark themes, captures screenshots, checks acceptance criteria, and reports findings by severity. Use when asked for a "UI walk", "UAT", "acceptance walk", "release walk", "walk this change", "visual check", "screenshot check", "check it on mobile", "check dark mode", "critic visual pass", or before merging or releasing any user-visible change.
+description: Walk a UI change in a real browser, by a person or an agent, and produce a findings report. Writes click-through steps with expected results, runs them at phone width (390 px) and desktop width (1440 px) in light and dark themes, captures screenshots, checks acceptance criteria, and reports findings by severity. Use when asked for a "UI walk", "UAT", "acceptance walk", "release walk", "walk this change", "visual check", "screenshot check", "check it on mobile", "check dark mode", "reviewer visual pass", or before merging or releasing any user-visible change.
 ---
 
 # UI Test Walk
@@ -19,7 +19,7 @@ should see.
 - **Independence**: the walker should not be the builder. A builder sees what they meant to
   build. If an agent built the change, a separate agent with its own context walks it and
   takes its own screenshots rather than reusing the builder's. Use the strongest model class
-  for this critic role; visual drift is easy to miss.
+  for this reviewer role; visual drift is easy to miss.
 
 ## Step 1: Write the steps
 
@@ -114,6 +114,8 @@ fail and not run, and the verdict:
 - **Needs changes**: one or more blocker or high findings. Hand the findings to a fix round
   with the failing steps attached. Cap fix rounds at two, then escalate to a person.
 - **Escalate**: the fix needs a product decision.
+
+In the builder-reviewer loop's verdict terms: Blocker and High are blocking (needs-changes), Medium is a warning, Low is a suggestion.
 
 File medium and above as tracked issues with the full steps. Medium and low findings do not
 block a merge on their own; carry them into the next change that touches the same screen.
