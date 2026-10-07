@@ -1,0 +1,25 @@
+{
+  "name": "innovationengine",
+  "owner": { "name": "Dyer Innovation Station L.L.C.", "url": "https://innovation.dyer-capital.com" },
+  "description": "Open-source Claude Code skills we build with every day: software engineering, project management and design.",
+  "plugins": [
+    {
+      "name": "swe",
+      "source": "./plugins/swe",
+      "description": "Software engineer: agent-model-routing, builder-reviewer-loop, worktree-rectify, session-post-mortem.",
+      "category": "development"
+    },
+    {
+      "name": "tpm",
+      "source": "./plugins/tpm",
+      "description": "Technical project manager: sprint-board, feedback-triage, human-actions.",
+      "category": "productivity"
+    },
+    {
+      "name": "design",
+      "source": "./plugins/design",
+      "description": "Design: brand-design-system.",
+      "category": "design"
+    }
+  ]
+}

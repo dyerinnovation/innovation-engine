@@ -1,0 +1,16 @@
+{
+  "description": "Remind the agent to run swe:session-post-mortem when a prompt announces a context compaction.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/session-post-mortem/hooks/detect-compaction.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

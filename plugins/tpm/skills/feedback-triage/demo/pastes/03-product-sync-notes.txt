@@ -1,0 +1,6 @@
+Product sync, Oct 2. Attendees: Priya, Sam, Luis, me.
+- Offline search ships in beta 4, scope is titles only (Priya)
+- Sync conflict reports from two testers, Sam to collect device logs
+- Luis wants tag filters moved to beta 5
+- Decision: no new features after Oct 9 freeze
+- Open: who owns the onboarding copy review

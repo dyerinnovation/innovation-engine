@@ -1,0 +1,1 @@
+Sam: hey, two testers on the beta say edits made on their phone vanish after they open the laptop app. Both had been offline for a few hours. I can repro it once with airplane mode on. Not sure if it is related to the merge change from Tuesday. Can you look before Friday's build?

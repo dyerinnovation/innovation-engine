@@ -1,0 +1,11 @@
+{
+  "name": "design",
+  "displayName": "Design",
+  "version": "0.1.0",
+  "description": "Turn any brand into a self-contained design-token set, brand guide and specimen page.",
+  "author": { "name": "Dyer Innovation Station L.L.C.", "url": "https://innovation.dyer-capital.com" },
+  "homepage": "https://innovation.dyer-capital.com/skills/",
+  "repository": "https://github.com/dyerinnovation/innovation-engine",
+  "license": "MIT",
+  "keywords": ["design-system", "brand", "tokens", "css"]
+}

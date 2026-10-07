@@ -1,0 +1,3 @@
+# Private scrub terms (product names, hosts, people). Never commit.
+scripts/scrub-patterns.local
+.DS_Store

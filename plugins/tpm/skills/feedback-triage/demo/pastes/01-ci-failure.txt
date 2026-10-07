@@ -1,0 +1,8 @@
+Run pnpm test --filter @northwind/sync
+ FAIL  packages/sync/src/merge.test.ts
+  merge > keeps both edits when timestamps tie
+    AssertionError: expected 'Draft v2' to equal 'Draft v2\nDraft v2b'
+      at merge.test.ts:48:22
+ Tests: 1 failed, 63 passed
+ ELIFECYCLE  Test failed. See above for more details.
+Error: Process completed with exit code 1.
