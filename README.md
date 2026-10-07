@@ -28,6 +28,9 @@ from their descriptions when the moment fits.
 | `builder-reviewer-loop` | Runs a change as a builder plus an independent reviewer, with its own screenshots for UI work. |
 | `worktree-rectify` | Finds uncommitted, unpushed, stashed or orphaned work across your repos and recovers it. |
 | `session-post-mortem` | Before a compaction, lists the session's churn and proposes instruction fixes, approved one by one. |
+| `mcp-tool-design` | Designs MCP tools agents pick correctly: names, descriptions, honest annotations, scopes and safety. |
+| `test-strategy` | Picks the test layers for a change, including evals for model output, and what must pass before merge. |
+| `ui-test-walk` | Walks a UI change step by step at phone and desktop width, with screenshots and a severity-rated report. |
 
 The `swe` plugin also ships a `UserPromptSubmit` hook that reminds Claude to run
 `session-post-mortem` when you announce a compaction ("then I'll compact"). It only adds
@@ -40,6 +43,9 @@ context; it never blocks a prompt.
 | `sprint-board` | Builds and keeps current a live Agile board page backed by a shared database. |
 | `feedback-triage` | Files every paste (logs, messages, notes, feedback) verbatim into a typed, dated folder, via a background agent. |
 | `human-actions` | Keeps one tracked list of the steps only a person can do, with evidence on completion. |
+| `prd-writing` | Writes requirements docs grounded in the code, with decisions in place and tagged acceptance criteria, plus a linter. |
+| `release-ladder` | Runs one tracker project per release with gate reviews, in GitHub, Linear or Jira. |
+| `architecture-diagrams` | Keeps current and target architecture diagrams side by side, readable and exported. |
 
 The `tpm` plugin also ships the `feedback-triage` filer agent.
 
