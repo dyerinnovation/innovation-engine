@@ -68,6 +68,10 @@ The `tpm` plugin also ships the `feedback-triage` filer agent.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Contact
+
+Questions and security reports: opensource-innovation@dyer-capital.com. For bugs and ideas, open a GitHub issue.
+
 ## License
 
 MIT. Copyright (c) 2026 Dyer Innovation Station L.L.C.
