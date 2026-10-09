@@ -10,6 +10,9 @@ not the friction. Lessons that stay in the conversation evaporate; lessons encod
 the right instruction file compound. But every rule is context every future session
 pays for, so the user is the gate on what gets encoded.
 
+This is a process retro, not a critique of anyone. It looks at how the work flowed (ask,
+build, verify, ship) and where that flow leaked, never at who made a mistake.
+
 The `swe` plugin ships a `UserPromptSubmit` hook (`hooks/detect-compaction.sh`, registered
 in the plugin's `hooks/hooks.json`) that injects a reminder to run this skill when a prompt
 announces a compaction. It never blocks a prompt. The user can also invoke the skill
@@ -34,6 +37,8 @@ instruction surface would have saved:
 - instructions the user had to give twice
 - corrections from the user ("no, not that", "I said ...", "use X instead")
 - files that contradicted each other, and which one turned out to be right
+- steps of the flow that were skipped or out of order: built before the ask was clear,
+  shipped before it was verified, verified by looking instead of by a check that can fail
 
 Each item gets one line of evidence: what happened and roughly when. Leave out work that
 went fine, and do not re-review the diff; this is about process.
@@ -63,7 +68,8 @@ section. A contradiction is fixed by correcting the wrong file, not by adding a 
 
 Recurring churn escalates. If the same class of churn already has an approved fix (a
 rule exists and was ignored, a memory entry covers it), the fix was too weak: propose
-the next step up (rule to script, script to hook or check), flagged as a repeat.
+the next step up (rule to script, script to hook or check), flagged as a repeat. Check the
+post-mortem records (step 6) for the same leak in an earlier session.
 
 ## 4. Propose in one table
 
@@ -94,7 +100,21 @@ with its file path. Unapproved items are dropped, not parked somewhere else.
 Changes to files under version control follow that repo's usual flow (branch, commit);
 do not push or merge unless the user asked for it in this session.
 
-## 6. Hand back
+## 6. Keep a record
+
+If the session had churn, add one row to the step 4 table proposing a dated record,
+`docs/post-mortems/<YYYY-MM-DD>-<slug>.md` in the project (or wherever the project keeps
+them), and write it only if approved. Keep it short, with four sections:
+
+- **What shipped**: one line per outcome.
+- **What cost time**: the churn items, with the change applied or declined for each.
+- **Recurrences**: items that match an earlier record, and the escalation proposed.
+- **Still open**: anything unfinished or deferred.
+
+Records and memory entries are append-only: add new entries or amend with approval;
+never silently rewrite or delete an earlier one.
+
+## 7. Hand back
 
 End with one line telling the user it is safe to compact, for example:
 "Post-mortem done (2 changes applied, 1 declined). Ready to compact."
