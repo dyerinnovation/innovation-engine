@@ -1,0 +1,100 @@
+/* =============================================================================
+   Engine default theme
+   The neutral fallback that design-system-resolution uses when neither the user
+   nor the project names a design system. Brand-neutral on purpose: no company
+   colors, no logo, system font stacks only. Self-contained: no CDN, no @font-face.
+
+   Contrast (WCAG 2.1, checked against bg, surface and sunken in each theme):
+   - text, text-soft, text-muted, accent, success, warning and danger all reach
+     4.5:1 or better on every ground in their own theme.
+   - White text is used only on accent-fill (6.7:1), success-fill (5.0:1) and
+     danger-fill (6.5:1). Never put white text on accent in dark mode; use
+     accent-fill, which stays the same in both themes.
+
+   Usage: paste this file into a page's <style>, then style with the semantic
+   names (--color-*, --font-*, --space-*, --radius-*). Never use the raw --l-* or
+   --d-* names in page CSS. data-theme="light" or "dark" on <html> forces a theme.
+   ============================================================================= */
+
+:root {
+  /* Light raw values */
+  --l-bg: #f8fafc;       --l-surface: #ffffff;   --l-sunken: #f1f5f9;
+  --l-rule: #e2e8f0;     --l-control: #cbd5e1;
+  --l-text: #0f172a;     --l-text-soft: #334155; --l-text-muted: #475569;
+  --l-accent: #1d4ed8;   --l-accent-tint: rgba(29, 78, 216, .10);
+  --l-success: #15803d;  --l-warning: #854d0e;   --l-danger: #b91c1c;
+
+  /* Dark raw values */
+  --d-bg: #0b1120;       --d-surface: #151c2c;   --d-sunken: #10172a;
+  --d-rule: #263045;     --d-control: #3a465e;
+  --d-text: #f8fafc;     --d-text-soft: #e2e8f0; --d-text-muted: #a3b0c2;
+  --d-accent: #93b4ff;   --d-accent-tint: rgba(147, 180, 255, .16);
+  --d-success: #4ade80;  --d-warning: #facc15;   --d-danger: #f87171;
+
+  /* Fills behind white text: identical in both themes */
+  --color-accent-fill: #1d4ed8;
+  --color-accent-fill-press: #1e40af;
+  --color-success-fill: #15803d;
+  --color-danger-fill: #b91c1c;
+  --color-on-fill: #ffffff;
+
+  /* Type: system stacks, no web fonts */
+  --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  --text-xs: .75rem;  --text-sm: .875rem; --text-base: 1rem;  --text-md: 1.25rem;
+  --text-lg: 1.5rem;  --text-xl: 2rem;    --text-2xl: 2.75rem;
+  --leading-tight: 1.15; --leading-body: 1.55;
+
+  /* Spacing (4px base) and shape */
+  --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
+  --space-5: 1.5rem; --space-6: 2rem;  --space-8: 3rem;   --space-10: 4rem;
+  --radius-sm: 4px;  --radius-md: 8px; --radius-lg: 12px; --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, .08);
+
+  /* Semantic names: light by default */
+  --color-bg: var(--l-bg);           --color-surface: var(--l-surface);
+  --color-sunken: var(--l-sunken);   --color-rule: var(--l-rule);
+  --color-control: var(--l-control);
+  --color-text: var(--l-text);       --color-text-soft: var(--l-text-soft);
+  --color-text-muted: var(--l-text-muted);
+  --color-accent: var(--l-accent);   --color-accent-tint: var(--l-accent-tint);
+  --color-success: var(--l-success); --color-warning: var(--l-warning);
+  --color-danger: var(--l-danger);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: var(--d-bg);           --color-surface: var(--d-surface);
+    --color-sunken: var(--d-sunken);   --color-rule: var(--d-rule);
+    --color-control: var(--d-control);
+    --color-text: var(--d-text);       --color-text-soft: var(--d-text-soft);
+    --color-text-muted: var(--d-text-muted);
+    --color-accent: var(--d-accent);   --color-accent-tint: var(--d-accent-tint);
+    --color-success: var(--d-success); --color-warning: var(--d-warning);
+    --color-danger: var(--d-danger);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: var(--d-bg);           --color-surface: var(--d-surface);
+  --color-sunken: var(--d-sunken);   --color-rule: var(--d-rule);
+  --color-control: var(--d-control);
+  --color-text: var(--d-text);       --color-text-soft: var(--d-text-soft);
+  --color-text-muted: var(--d-text-muted);
+  --color-accent: var(--d-accent);   --color-accent-tint: var(--d-accent-tint);
+  --color-success: var(--d-success); --color-warning: var(--d-warning);
+  --color-danger: var(--d-danger);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: var(--leading-body);
+}

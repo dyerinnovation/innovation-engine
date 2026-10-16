@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deck Title</title>
+<style>
+/* =============================================================================
+   THEME TOKENS: the only block you edit to rebrand the deck.
+   Paste a design system's semantic aliases here (same names), or keep this
+   neutral default. Hex values only, so the pptx builder can read them.
+   ============================================================================= */
+:root {
+  --color-bg:            #ffffff;  /* slide background */
+  --color-surface:       #f3f4f6;  /* panels, cards */
+  --color-rule:          #d9dce1;  /* hairlines */
+  --color-text:          #16181d;  /* primary ink */
+  --color-text-soft:     #3d424b;  /* body text */
+  --color-text-muted:    #6b717c;  /* sources, page numbers */
+  --color-accent:        #2856c9;  /* the one hero color, used sparingly */
+  --color-accent-strong: #1d3f96;  /* fills that carry white text */
+  --color-on-accent:     #ffffff;  /* text on accent fills, 4.5:1 or better */
+  --color-good:          #1f7a4d;  /* data only */
+  --color-risk:          #b4501b;  /* data only */
+  --font-display: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body:    "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* =============================================================================
+   LAYOUT (no edits needed). Slides are 16:9 and sized in container units, so
+   they scale to any screen and print one per page at 1280 x 720.
+   ============================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: #e6e8ec; color: var(--color-text); font-family: var(--font-body); }
+.deck { container-type: inline-size; width: min(1280px, 100vw - 32px); margin: 16px auto; display: grid; gap: 16px; }
+.slide {
+  position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+  background: var(--color-bg); padding: 5.5cqw 6cqw 5cqw; display: flex; flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+}
+.kicker { font: 700 1.05cqw/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 1.4cqw; }
+h1, h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; margin: 0; color: var(--color-text); }
+h1 { font-size: 4.6cqw; line-height: 1.05; max-width: 22ch; }
+h2 { font-size: 3cqw; line-height: 1.12; max-width: 30ch; }
+.sub { font-size: 1.7cqw; line-height: 1.35; color: var(--color-text-soft); margin: 1.6cqw 0 0; max-width: 46ch; }
+.body { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+ul.points { list-style: none; padding: 0; margin: 2.4cqw 0 0; display: grid; gap: 1.3cqw; }
+ul.points li { font-size: 1.9cqw; line-height: 1.25; color: var(--color-text-soft); padding-left: 2cqw; position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ul.points li::before { content: ""; position: absolute; left: 0; top: .5em; width: .8cqw; height: .8cqw; background: var(--color-accent); border-radius: 2px; }
+.foot { display: flex; justify-content: space-between; gap: 2cqw; font-size: .95cqw; color: var(--color-text-muted); border-top: 1px solid var(--color-rule); padding-top: 1cqw; margin-top: auto; }
+.notes { display: none; }
+
+/* title */
+.slide[data-layout="title"] { background: var(--color-accent-strong); color: var(--color-on-accent); justify-content: center; }
+.slide[data-layout="title"] h1, .slide[data-layout="title"] .kicker, .slide[data-layout="title"] .sub, .slide[data-layout="title"] .meta { color: var(--color-on-accent); }
+.slide[data-layout="title"] h1 { font-size: 5.6cqw; }
+.meta { font-size: 1.2cqw; margin-top: 3cqw; opacity: .85; }
+
+/* bottom-line */
+.slide[data-layout="bottom-line"] h2 { font-size: 3.6cqw; max-width: 26ch; }
+.slide[data-layout="bottom-line"] .body { border-left: .6cqw solid var(--color-accent); padding-left: 3cqw; }
+
+/* big-number */
+.big { display: flex; align-items: flex-end; gap: 3cqw; margin-top: 1.5cqw; }
+.num { font: 800 14cqw/0.9 var(--font-display); letter-spacing: -0.04em; color: var(--color-accent); }
+.label { font-size: 2.2cqw; line-height: 1.2; font-weight: 700; color: var(--color-text); max-width: 20ch; padding-bottom: 1.4cqw; }
+.context { font-size: 1.7cqw; color: var(--color-text-soft); margin: 2cqw 0 0; max-width: 52ch; }
+
+/* comparison */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5cqw; margin-top: 2.5cqw; }
+.col { background: var(--color-surface); border-radius: 8px; padding: 2.4cqw; border-top: .5cqw solid var(--color-rule); }
+.col[data-pick] { border-top-color: var(--color-accent); }
+.col h3 { font: 800 2cqw/1.15 var(--font-display); margin: 0 0 1cqw; }
+.col ul.points { margin-top: 1cqw; }
+.col ul.points li { font-size: 1.6cqw; }
+.badge { display: inline-block; background: var(--color-accent-strong); color: var(--color-on-accent); font: 700 .95cqw/1 var(--font-body); padding: .6cqw 1cqw; border-radius: 999px; margin-bottom: 1cqw; letter-spacing: .06em; text-transform: uppercase; }
+
+/* timeline */
+.line { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 1.6cqw; margin-top: 4cqw; position: relative; }
+.line::before { content: ""; position: absolute; left: 0; right: 0; top: .9cqw; height: .3cqw; background: var(--color-rule); }
+.step { position: relative; padding-top: 3.2cqw; }
+.step::before { content: ""; position: absolute; top: 0; left: 0; width: 2cqw; height: 2cqw; border-radius: 50%; background: var(--color-bg); border: .4cqw solid var(--color-accent); }
+.step[data-pick]::before { background: var(--color-accent); }
+.when { font: 800 1.3cqw/1 var(--font-body); color: var(--color-accent); text-transform: uppercase; letter-spacing: .08em; }
+.what { font-size: 1.7cqw; line-height: 1.25; margin-top: .8cqw; color: var(--color-text); font-weight: 600; }
+
+/* decision */
+.ask { background: var(--color-accent-strong); color: var(--color-on-accent); border-radius: 8px; padding: 2cqw 2.6cqw; font: 800 2.3cqw/1.2 var(--font-display); margin-top: 2.4cqw; }
+
+@page { size: 1280px 720px; margin: 0; }
+@media print {
+  html, body { background: none; }
+  .deck { width: 1280px; margin: 0; gap: 0; }
+  .slide { box-shadow: none; break-after: page; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<!--
+  AUTHORING CONTRACT (read by scripts/build_pptx.py)
+  - One <section class="slide" data-layout="..."> per slide. Layouts: title,
+    bottom-line, big-number, comparison, timeline, decision.
+  - Text the pptx needs carries data-field: kicker, title, subtitle, meta, point,
+    number, label, context, ask, source, notes, head, when, what.
+  - Repeated items (columns, timeline steps, options) sit in an element with
+    data-group; add data-pick to the recommended one.
+  - Every number on a slide has a data-field="source" line saying where it came from.
+-->
+<main class="deck">
+
+  <section class="slide" data-layout="title">
+    <p class="kicker" data-field="kicker">Leadership review</p>
+    <h1 data-field="title">Cut onboarding time in half by Q3</h1>
+    <p class="sub" data-field="subtitle">A two-step plan and one decision for today</p>
+    <p class="meta" data-field="meta">Prepared for the steering group, version 1</p>
+    <aside class="notes" data-field="notes">Open with the ask. Everything after this slide supports it.</aside>
+  </section>
+
+  <section class="slide" data-layout="bottom-line">
+    <p class="kicker" data-field="kicker">Bottom line</p>
+    <div class="body">
+      <h2 data-field="title">Approve option B: it pays back in two quarters</h2>
+      <ul class="points">
+        <li data-field="point">Saves 9 days per new hire</li>
+        <li data-field="point">Uses the team we already have</li>
+        <li data-field="point">First results visible in 6 weeks</li>
+      </ul>
+    </div>
+    <div class="foot"><span data-field="source">Source: onboarding survey, last two quarters (sample data)</span><span>2</span></div>
+  </section>
+
+  <section class="slide" data-layout="big-number">
+    <p class="kicker" data-field="kicker">The problem</p>
+    <h2 data-field="title">New hires wait too long to do real work</h2>
+    <div class="body">
+      <div class="big">
+        <div class="num" data-field="number">18</div>
+        <div class="label" data-field="label">days to first shipped task</div>
+      </div>
+      <p class="context" data-field="context">Peer teams average 8 days.</p>
+    </div>
+    <div class="foot"><span data-field="source">Source: ticket tracker export, median of 42 hires (sample data)</span><span>3</span></div>
+  </section>
+
+  <section class="slide" data-layout="comparison">
+    <p class="kicker" data-field="kicker">Options</p>
+    <h2 data-field="title">B is faster and cheaper than A</h2>
+    <div class="cols">
+      <div class="col" data-group>
+        <h3 data-field="head">A: hire a trainer</h3>
+        <ul class="points">
+          <li data-field="point">Cost: 140k per year</li>
+          <li data-field="point">Ready in 4 months</li>
+        </ul>
+      </div>
+      <div class="col" data-group data-pick>
+        <span class="badge">Recommended</span>
+        <h3 data-field="head">B: guided first week</h3>
+        <ul class="points">
+          <li data-field="point">Cost: 30k one time</li>
+          <li data-field="point">Ready in 6 weeks</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><span data-field="source">Source: vendor quotes and internal estimate (sample data)</span><span>4</span></div>
+  </section>
+
+  <section class="slide" data-layout="timeline">
+    <p class="kicker" data-field="kicker">Plan</p>
+    <h2 data-field="title">Results in six weeks, full rollout in twelve</h2>
+    <div class="line">
+      <div class="step" data-group><div class="when" data-field="when">Week 1</div><div class="what" data-field="what">Approve and staff</div></div>
+      <div class="step" data-group><div class="when" data-field="when">Week 3</div><div class="what" data-field="what">Pilot with 5 hires</div></div>
+      <div class="step" data-group data-pick><div class="when" data-field="when">Week 6</div><div class="what" data-field="what">First results review</div></div>
+      <div class="step" data-group><div class="when" data-field="when">Week 12</div><div class="what" data-field="what">All teams live</div></div>
+    </div>
+    <div class="foot"><span data-field="source">Source: delivery plan draft (sample data)</span><span>5</span></div>
+  </section>
+
+  <section class="slide" data-layout="decision">
+    <p class="kicker" data-field="kicker">Decision needed</p>
+    <h2 data-field="title">One yes today keeps the Q3 date</h2>
+    <div class="body">
+      <div class="ask" data-field="ask">Approve 30k and a 6 week pilot for option B</div>
+      <ul class="points">
+        <li data-field="point">If yes: pilot starts next Monday</li>
+        <li data-field="point">If no: Q3 target moves to Q1</li>
+      </ul>
+    </div>
+    <div class="foot"><span data-field="source">Source: budget line confirmed with finance (sample data)</span><span>6</span></div>
+  </section>
+
+</main>
+</body>
+</html>

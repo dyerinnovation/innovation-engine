@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Working Notes</title>
+<style>
+/* ==========================================================================
+   THEME TOKENS (the only style block a project edits)
+   Raw colours, fonts and radii live here, once for light (--l-*) and once
+   for dark (--d-*). The defaults are a plain, neutral palette. To theme the
+   page, change only this block; the mapping and components never change.
+   ========================================================================== */
+:root{
+  /* Neutrals */
+  --l-ground:#f8fafc; --l-raised:#ffffff; --l-sunken:#f1f5f9; --l-line:#e2e8f0; --l-control:#cbd5e1;
+  --l-ink:#0f172a;    --l-body:#1e293b;   --l-muted:#475569;  --l-faint:#64748b;
+  --d-ground:#0b1120; --d-raised:#151c2c; --d-sunken:#10172a; --d-line:#263045; --d-control:#3a465e;
+  --d-ink:#f8fafc;    --d-body:#e2e8f0;   --d-muted:#a3b0c2;  --d-faint:#8391a7;
+
+  /* Brand: fill passes 4.5:1 with white text */
+  --brand:#2563eb; --brand-fill:#1d4ed8; --brand-press:#1e3a8a; --on-fill:#ffffff;
+  --l-brand-text:#1d4ed8; --d-brand-text:#93b4ff;
+  --l-brand-tint:rgba(37,99,235,.10); --d-brand-tint:rgba(37,99,235,.22);
+
+  /* Note kinds: a dot carries the hue, text stays neutral */
+  --kind-decision:#2563eb;
+  --kind-action:#0d9488;
+  --kind-question:#d97706;
+  --kind-fact:#7c3aed;
+
+  /* Semantic */
+  --l-warn-text:#a16207; --d-warn-text:#facc15;
+  --l-warn-tint:rgba(234,179,8,.12); --d-warn-tint:rgba(234,179,8,.14);
+  --l-mark:rgba(234,179,8,.25); --d-mark:rgba(234,179,8,.25);
+
+  /* Type and shape */
+  --font-sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  --radius-sm:4px; --radius-lg:8px; --radius-xl:12px; --radius-full:9999px;
+  --shadow-sm:0 1px 3px 0 rgba(0,0,0,.08),0 1px 2px -1px rgba(0,0,0,.08);
+  --focus-ring:0 0 0 3px rgba(37,99,235,.30);
+
+  /* ---- Mapping (light by default); do not edit below this line ---- */
+  --ground:var(--l-ground); --raised:var(--l-raised); --sunken:var(--l-sunken); --line:var(--l-line); --control:var(--l-control);
+  --ink:var(--l-ink); --body:var(--l-body); --muted:var(--l-muted); --faint:var(--l-faint);
+  --brand-text:var(--l-brand-text); --brand-tint:var(--l-brand-tint);
+  --warn-text:var(--l-warn-text); --warn-tint:var(--l-warn-tint); --mark:var(--l-mark);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:var(--d-ground); --raised:var(--d-raised); --sunken:var(--d-sunken); --line:var(--d-line); --control:var(--d-control);
+    --ink:var(--d-ink); --body:var(--d-body); --muted:var(--d-muted); --faint:var(--d-faint);
+    --brand-text:var(--d-brand-text); --brand-tint:var(--d-brand-tint);
+    --warn-text:var(--d-warn-text); --warn-tint:var(--d-warn-tint); --mark:var(--d-mark);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:var(--d-ground); --raised:var(--d-raised); --sunken:var(--d-sunken); --line:var(--d-line); --control:var(--d-control);
+  --ink:var(--d-ink); --body:var(--d-body); --muted:var(--d-muted); --faint:var(--d-faint);
+  --brand-text:var(--d-brand-text); --brand-tint:var(--d-brand-tint);
+  --warn-text:var(--d-warn-text); --warn-tint:var(--d-warn-tint); --mark:var(--d-mark);
+}
+
+/* ========================= Components ========================= */
+*{box-sizing:border-box;font-style:normal}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--body);font-family:var(--font-sans);font-size:14px;line-height:21px;padding:20px 16px 48px;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--brand-text);text-underline-offset:2px;overflow-wrap:anywhere}
+.mono{font-family:var(--font-mono);font-size:12px;font-variant-numeric:tabular-nums}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;min-width:0}
+
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+h1{margin:0;font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+.sub{margin:2px 0 0;color:var(--muted);font-size:13px}
+.stamp{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted)}
+.stamp b{color:var(--ink);font-weight:600}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 12px;border-radius:var(--radius-lg);border:1px solid var(--control);background:var(--raised);cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--brand-fill);border-color:var(--brand-fill);color:var(--on-fill)}
+.btn.primary:active{background:var(--brand-press)}
+.btn.xs{height:24px;padding:0 8px;font-size:12px}
+:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+
+.panel{background:var(--raised);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px;min-width:0}
+
+/* Capture bar */
+.capture{display:grid;grid-template-columns:auto minmax(0,1fr) 160px auto;gap:8px;align-items:center}
+.capture select,.capture input,.search{height:34px;border:1px solid var(--control);border-radius:var(--radius-lg);background:var(--sunken);padding:0 10px;min-width:0;width:100%}
+.capture-msg{grid-column:1/-1;margin:0;font-size:12px;color:var(--warn-text)}
+@media (max-width:720px){.capture{grid-template-columns:1fr 1fr}.capture .c-text{grid-column:1/-1;order:-1}}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--raised);border-radius:var(--radius-full);padding:4px 11px;font-size:12.5px;font-weight:500;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--brand-tint);border-color:var(--brand);color:var(--ink)}
+.chip .n{color:var(--faint);font-family:var(--font-mono);font-size:11px}
+.search{max-width:260px}
+.exports{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:720px){.search{max-width:none}}
+
+.kdot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:var(--faint)}
+.kdot.decision{background:var(--kind-decision)} .kdot.action{background:var(--kind-action)}
+.kdot.question{background:var(--kind-question)} .kdot.fact{background:var(--kind-fact)}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.section h2{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.section h2 .n{font-family:var(--font-mono);color:var(--faint);letter-spacing:0}
+.empty{margin:0;color:var(--faint);font-size:13px}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.note{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--sunken);padding:9px 11px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.note .text{color:var(--ink);overflow-wrap:anywhere}
+.note.done .text,.note.superseded .text{text-decoration:line-through;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--raised);border-radius:var(--radius-full);padding:0 8px;line-height:20px;font-size:11.5px;color:var(--body)}
+.tag.owner b{font-weight:600;color:var(--ink)}
+.tag.warn{border-color:transparent;background:var(--warn-tint);color:var(--warn-text);font-weight:600}
+.tag.new{border-color:var(--brand);color:var(--brand-text);font-weight:600}
+.src{font-family:var(--font-mono);font-size:11.5px}
+.excerpt{margin:0;border-left:3px solid var(--control);padding:4px 10px;font-size:13px;color:var(--body);background:var(--raised);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.excerpt .who{font-weight:600;color:var(--ink)}
+
+details.fold{background:var(--raised);border:1px solid var(--line);border-radius:var(--radius-xl);padding:10px 14px}
+details.fold>summary{cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);list-style-position:inside}
+details.fold[open]>summary{margin-bottom:10px}
+.tx{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.tx li{display:grid;grid-template-columns:62px 54px minmax(0,1fr);gap:8px;padding:4px 6px;border-radius:var(--radius-sm);scroll-margin-top:80px}
+.tx li.hit{background:var(--mark)}
+.tx .who{font-weight:600;color:var(--ink);overflow-wrap:anywhere}
+@media (max-width:560px){.tx li{grid-template-columns:54px minmax(0,1fr)}.tx .at{display:none}}
+.log{list-style:none;margin:0;padding:0;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:8px 14px;border-radius:var(--radius-lg);font-size:13px;box-shadow:var(--shadow-sm)}
+</style>
+</head>
+<body>
+<!--
+  DATA BLOCK. The skill rewrites only the JSON inside this script tag.
+  Schema and merge rule: see data-schema.md next to this template.
+  Never put secrets here. Keep "</" out of strings (write "<\/" instead).
+-->
+<script type="application/json" id="notes-data">
+{
+  "schema": 1,
+  "meta": {
+    "id": "example-planning-call",
+    "title": "Planning call: search feature",
+    "subtitle": "Working notes, filed automatically from the transcript",
+    "source": { "kind": "transcript", "evidence": "../meeting-notes/3-2-30/planning-call-search.md" },
+    "started": "2030-03-02T15:00:00Z",
+    "updated": "2030-03-02T15:12:00Z",
+    "revision": 2,
+    "cursor": "t-0009"
+  },
+  "notes": [
+    { "id": "d-001", "kind": "decision", "text": "Search ships first as title-only search; full-text search waits for the next release.", "status": "open", "src": ["t-0003", "t-0004"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:04:00Z", "updated": "2030-03-02T15:04:00Z" },
+    { "id": "a-001", "kind": "action", "text": "Draft the empty-state copy for search with no results.", "owner": "Designer", "due": "2030-03-06", "status": "open", "src": ["t-0005"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:05:00Z", "updated": "2030-03-02T15:05:00Z" },
+    { "id": "a-002", "kind": "action", "text": "Measure search response time on the largest test account.", "owner": "unassigned", "status": "open", "src": ["t-0008"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:11:00Z", "updated": "2030-03-02T15:11:00Z" },
+    { "id": "q-001", "kind": "question", "text": "Should search include archived notes?", "status": "open", "src": ["t-0006"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:06:00Z", "updated": "2030-03-02T15:06:00Z" },
+    { "id": "q-002", "kind": "question", "text": "Who owns the response-time check?", "status": "open", "src": ["t-0008"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:11:00Z", "updated": "2030-03-02T15:11:00Z" },
+    { "id": "f-001", "kind": "fact", "text": "The largest test account holds about 40,000 notes.", "status": "open", "src": ["t-0007"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:09:00Z", "updated": "2030-03-02T15:09:00Z" },
+    { "id": "f-002", "kind": "fact", "text": "Release freeze starts on 2030-03-09.", "status": "superseded", "superseded_by": "f-003", "src": ["t-0002"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:02:00Z", "updated": "2030-03-02T15:10:00Z" },
+    { "id": "f-003", "kind": "fact", "text": "Release freeze moved to 2030-03-13.", "status": "open", "supersedes": "f-002", "src": ["t-0009"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:12:00Z", "updated": "2030-03-02T15:12:00Z" },
+    { "id": "p-mg2k1a", "kind": "fact", "text": "Search usage numbers from last quarter are in the analytics folder.", "status": "open", "src": [], "origin": "person", "rev": 2, "created": "2030-03-02T15:07:00Z", "updated": "2030-03-02T15:07:00Z" }
+  ],
+  "transcript": [
+    { "id": "t-0001", "speaker": "Lead", "at": "00:00:05", "text": "Let's use the time on search." },
+    { "id": "t-0002", "speaker": "Lead", "at": "00:01:10", "text": "Reminder, the release freeze is on the ninth." },
+    { "id": "t-0003", "speaker": "Engineer", "at": "00:02:40", "text": "Full-text search is a bigger job than it looks. Titles only is doable this release." },
+    { "id": "t-0004", "speaker": "Lead", "at": "00:03:15", "text": "Then we go with titles only now, full text next release." },
+    { "id": "t-0005", "speaker": "Designer", "at": "00:04:02", "text": "I'll draft the no-results empty state by Monday." },
+    { "id": "t-0006", "speaker": "Engineer", "at": "00:05:30", "text": "Open question, do archived notes show up in results?" },
+    { "id": "t-0007", "speaker": "Engineer", "at": "00:07:45", "text": "The biggest test account has around forty thousand notes." },
+    { "id": "t-0008", "speaker": "Lead", "at": "00:09:20", "text": "Someone should time search on that account before we commit." },
+    { "id": "t-0009", "speaker": "Lead", "at": "00:11:50", "text": "Update, the freeze moved to the thirteenth." }
+  ],
+  "log": [
+    { "t": "15:06", "msg": "Revision 1: 1 decision, 1 action, 1 question from t-0001 to t-0006." },
+    { "t": "15:12", "msg": "Revision 2: 1 action, 1 question, 2 facts; f-002 superseded by f-003." }
+  ]
+}
+</script>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1 id="title">Working Notes</h1>
+      <p class="sub" id="subtitle"></p>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <form class="panel capture" id="capture" autocomplete="off">
+    <select id="c-kind" aria-label="Note type">
+      <option value="decision">Decision</option>
+      <option value="action">Action</option>
+      <option value="question">Question</option>
+      <option value="fact">Fact</option>
+    </select>
+    <input class="c-text" id="c-text" type="text" placeholder="Add a note: one idea, plain words" aria-label="Note text">
+    <input id="c-owner" type="text" placeholder="Owner" aria-label="Owner">
+    <button class="btn primary" type="submit">Add Note</button>
+    <p class="capture-msg" id="c-msg" hidden></p>
+  </form>
+
+  <div class="toolbar">
+    <div class="chips" id="chips"></div>
+    <input class="search" id="search" type="search" placeholder="Search notes and owners" aria-label="Search notes">
+    <div class="exports">
+      <button class="btn" type="button" id="x-md">Export Markdown</button>
+      <button class="btn" type="button" id="x-json">Export JSON</button>
+      <button class="btn" type="button" id="x-copy">Copy Markdown</button>
+    </div>
+  </div>
+
+  <div class="grid" id="sections"></div>
+
+  <details class="fold" id="superseded-fold">
+    <summary>Superseded <span class="mono" id="sup-n"></span></summary>
+    <ul class="list" id="superseded"></ul>
+  </details>
+
+  <details class="fold" id="tx-fold">
+    <summary>Transcript <span class="mono" id="tx-n"></span></summary>
+    <p class="sub" id="tx-file"></p>
+    <ol class="tx" id="tx"></ol>
+  </details>
+
+  <details class="fold">
+    <summary>Update Log</summary>
+    <ul class="log" id="log"></ul>
+  </details>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("notes-data").textContent);
+  var KINDS = [
+    {key:"decision", label:"Decisions"},
+    {key:"action",   label:"Actions"},
+    {key:"question", label:"Open Questions"},
+    {key:"fact",     label:"Key Facts"}
+  ];
+  var store = "working-notes:" + (DATA.meta.id || "notes");
+  var local = {notes:[], status:{}};
+  try { var raw = localStorage.getItem(store); if (raw) local = Object.assign(local, JSON.parse(raw)); } catch (e) {}
+  function save(){ try { localStorage.setItem(store, JSON.stringify(local)); } catch (e) {} }
+
+  var filter = "all", query = "";
+  var lines = {};
+  (DATA.transcript || []).forEach(function(l){ lines[l.id] = l; });
+
+  function el(tag, cls, text){ var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function safeHref(h){ return /^(https:\/\/|\.{0,2}\/|[\w.-]+\/|#)/.test(h || "") && !/^javascript:/i.test(h) ? h : null; }
+
+  // All notes: the file's notes, then this viewer's unmerged notes, with this viewer's status marks applied.
+  function allNotes(){
+    var ids = {};
+    var out = (DATA.notes || []).map(function(n){ ids[n.id] = 1; var c = Object.assign({}, n); if (local.status[n.id]) { c.status = local.status[n.id]; c.local_edit = true; } return c; });
+    local.notes.forEach(function(n){ if (!ids[n.id]) out.push(Object.assign({local:true}, n, local.status[n.id] ? {status:local.status[n.id]} : {})); });
+    return out;
+  }
+  function matches(n){
+    if (!query) return true;
+    var q = query.toLowerCase();
+    return (n.text + " " + (n.owner || "") + " " + n.id).toLowerCase().indexOf(q) > -1;
+  }
+
+  function noteItem(n){
+    var li = el("li", "note " + (n.status || "open")); li.id = "n-" + n.id;
+    var top = el("div", "meta");
+    var dot = el("span", "kdot " + n.kind); top.appendChild(dot);
+    top.appendChild(el("span", "mono", n.id));
+    if (n.local) top.appendChild(el("span", "tag warn", "Added here, not merged"));
+    else if (n.origin === "person") top.appendChild(el("span", "tag", "Person"));
+    if (n.rev && n.rev === DATA.meta.revision && n.status !== "superseded") top.appendChild(el("span", "tag new", "New"));
+    if (n.status && n.status !== "open") top.appendChild(el("span", "tag", n.status));
+    li.appendChild(top);
+    li.appendChild(el("div", "text", n.text));
+    var m = el("div", "meta");
+    if (n.kind === "action") {
+      var o = el("span", "tag owner" + (!n.owner || n.owner === "unassigned" ? " warn" : ""));
+      if (!n.owner || n.owner === "unassigned") o.textContent = "No owner yet";
+      else { o.appendChild(document.createTextNode("Owner ")); o.appendChild(el("b", null, n.owner)); }
+      m.appendChild(o);
+      if (n.due) m.appendChild(el("span", "tag", "Due " + n.due));
+    }
+    if (n.answer) m.appendChild(el("span", "tag", "Answer: " + n.answer));
+    if (n.supersedes) { var s = el("a", "src", "replaces " + n.supersedes); s.href = "#n-" + n.supersedes; s.addEventListener("click", openSup); m.appendChild(s); }
+    if (n.superseded_by) { var b = el("a", "src", "replaced by " + n.superseded_by); b.href = "#n-" + n.superseded_by; m.appendChild(b); }
+    (n.src || []).forEach(function(id){
+      var a = el("a", "src", id); a.href = "#" + id;
+      a.addEventListener("click", function(ev){ ev.preventDefault(); jump(id); });
+      m.appendChild(a);
+    });
+    if ((n.src || []).length) {
+      var t = el("button", "btn xs", "Show Excerpt"); t.type = "button";
+      var box = el("div"); box.hidden = true;
+      n.src.forEach(function(id){
+        var l = lines[id]; if (!l) return;
+        var q = el("p", "excerpt"); q.appendChild(el("span", "who", l.speaker + ": ")); q.appendChild(document.createTextNode(l.text)); box.appendChild(q);
+      });
+      t.addEventListener("click", function(){ box.hidden = !box.hidden; t.textContent = box.hidden ? "Show Excerpt" : "Hide Excerpt"; });
+      m.appendChild(t);
+      li.appendChild(m); li.appendChild(box);
+    } else li.appendChild(m);
+    if (n.kind === "action" && n.status !== "superseded") {
+      var d = el("button", "btn xs", n.status === "done" ? "Reopen" : "Mark Done"); d.type = "button";
+      d.addEventListener("click", function(){ local.status[n.id] = n.status === "done" ? "open" : "done"; save(); render(); });
+      m.appendChild(d);
+    }
+    return li;
+  }
+
+  function openSup(){ document.getElementById("superseded-fold").open = true; }
+  function jump(id){
+    var f = document.getElementById("tx-fold"); f.open = true;
+    var li = document.getElementById(id); if (!li) return;
+    document.querySelectorAll(".tx li.hit").forEach(function(x){ x.classList.remove("hit"); });
+    li.classList.add("hit"); li.scrollIntoView({block:"center"});
+    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+  }
+
+  function render(){
+    var meta = DATA.meta || {};
+    document.title = meta.title || "Working Notes";
+    document.getElementById("title").textContent = meta.title || "Working Notes";
+    document.getElementById("subtitle").textContent = meta.subtitle || "";
+    var st = document.getElementById("stamp"); st.textContent = "";
+    function stamp(label, val){ var s = el("span"); s.appendChild(document.createTextNode(label + " ")); s.appendChild(el("b", null, val)); st.appendChild(s); }
+    stamp("Updated", (meta.updated || "").replace("T", " ").replace(/:\d\dZ?$/, "").replace(/Z$/, ""));
+    stamp("Revision", String(meta.revision || 0));
+
+    var notes = allNotes();
+    var live = notes.filter(function(n){ return n.status !== "superseded"; });
+    var chips = document.getElementById("chips"); chips.textContent = "";
+    [{key:"all", label:"All"}].concat(KINDS).forEach(function(k){
+      var c = el("button", "chip"); c.type = "button"; c.setAttribute("aria-pressed", String(filter === k.key));
+      if (k.key !== "all") c.appendChild(el("span", "kdot " + k.key));
+      c.appendChild(document.createTextNode(k.label));
+      c.appendChild(el("span", "n", String(live.filter(function(n){ return k.key === "all" || n.kind === k.key; }).length)));
+      c.addEventListener("click", function(){ filter = k.key; render(); });
+      chips.appendChild(c);
+    });
+
+    var sec = document.getElementById("sections"); sec.textContent = "";
+    KINDS.forEach(function(k){
+      if (filter !== "all" && filter !== k.key) return;
+      var items = live.filter(function(n){ return n.kind === k.key && matches(n); });
+      if (k.key === "question") items.sort(function(a, b){ return (a.status === "answered") - (b.status === "answered"); });
+      if (k.key === "action") items.sort(function(a, b){ return (a.status === "done") - (b.status === "done"); });
+      var p = el("section", "panel section");
+      var h = el("h2"); h.appendChild(el("span", "kdot " + k.key)); h.appendChild(document.createTextNode(k.label)); h.appendChild(el("span", "n", String(items.length)));
+      p.appendChild(h);
+      if (!items.length) p.appendChild(el("p", "empty", query ? "No matches." : "Nothing filed yet."));
+      else { var ul = el("ul", "list"); items.forEach(function(n){ ul.appendChild(noteItem(n)); }); p.appendChild(ul); }
+      sec.appendChild(p);
+    });
+
+    var sup = notes.filter(function(n){ return n.status === "superseded" && matches(n); });
+    var su = document.getElementById("superseded"); su.textContent = "";
+    sup.forEach(function(n){ su.appendChild(noteItem(n)); });
+    document.getElementById("sup-n").textContent = "(" + sup.length + ")";
+
+    var tx = document.getElementById("tx"); tx.textContent = "";
+    (DATA.transcript || []).forEach(function(l){
+      var li = el("li"); li.id = l.id;
+      li.appendChild(el("span", "mono", l.id));
+      li.appendChild(el("span", "mono at", l.at || ""));
+      var t = el("span"); t.appendChild(el("span", "who", (l.speaker || "Unknown") + ": ")); t.appendChild(document.createTextNode(l.text)); li.appendChild(t);
+      tx.appendChild(li);
+    });
+    document.getElementById("tx-n").textContent = "(" + (DATA.transcript || []).length + " lines)";
+    var tf = document.getElementById("tx-file"); tf.textContent = "";
+    var ev = meta.source && safeHref(meta.source.evidence);
+    if (ev) { tf.appendChild(document.createTextNode("Verbatim copy: ")); var a = el("a", null, meta.source.evidence); a.href = ev; tf.appendChild(a); }
+
+    var log = document.getElementById("log"); log.textContent = "";
+    (DATA.log || []).slice().reverse().forEach(function(e){ var li = el("li"); li.appendChild(el("span", "mono", e.t + "  ")); li.appendChild(document.createTextNode(e.msg)); log.appendChild(li); });
+  }
+
+  // Capture bar
+  var kindSel = document.getElementById("c-kind"), ownerIn = document.getElementById("c-owner"), msg = document.getElementById("c-msg");
+  function syncOwner(){ ownerIn.hidden = kindSel.value !== "action"; }
+  kindSel.addEventListener("change", syncOwner); syncOwner();
+  document.getElementById("capture").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var text = document.getElementById("c-text").value.trim(), kind = kindSel.value, owner = ownerIn.value.trim();
+    msg.hidden = true;
+    if (!text) { msg.textContent = "Write the note first."; msg.hidden = false; return; }
+    if (kind === "action" && !owner) { msg.textContent = "Every action needs an owner."; msg.hidden = false; ownerIn.focus(); return; }
+    var now = new Date().toISOString();
+    var n = {id: "p-" + Date.now().toString(36), kind: kind, text: text, status: "open", src: [], origin: "person", rev: DATA.meta.revision, created: now, updated: now};
+    if (kind === "action") n.owner = owner;
+    local.notes.push(n); save();
+    document.getElementById("c-text").value = ""; ownerIn.value = "";
+    render(); toast("Saved in this browser. Export JSON to merge it into the page.");
+  });
+  document.getElementById("search").addEventListener("input", function(e){ query = e.target.value.trim(); render(); });
+
+  // Exports (work offline: Blob download, clipboard copy)
+  function merged(){
+    var out = JSON.parse(JSON.stringify(DATA));
+    out.notes = allNotes().map(function(n){ var c = Object.assign({}, n); if (c.local || c.local_edit) { c.origin = c.local ? "person" : c.origin; c.person_status = c.local_edit ? c.status : undefined; } delete c.local; delete c.local_edit; return c; });
+    out.exported = new Date().toISOString();
+    return out;
+  }
+  function markdown(){
+    var d = merged(), out = ["# " + d.meta.title, "", "Updated " + d.meta.updated + ", revision " + d.meta.revision];
+    if (d.meta.source && d.meta.source.evidence) out.push("Transcript: " + d.meta.source.evidence);
+    KINDS.forEach(function(k){
+      out.push("", "## " + k.label, "");
+      var items = d.notes.filter(function(n){ return n.kind === k.key && n.status !== "superseded"; });
+      if (!items.length) out.push("- None yet");
+      items.forEach(function(n){
+        var bits = [];
+        if (n.kind === "action") bits.push("owner: " + (n.owner || "unassigned"));
+        if (n.due) bits.push("due " + n.due);
+        if (n.status && n.status !== "open") bits.push(n.status);
+        if (n.answer) bits.push("answer: " + n.answer);
+        if ((n.src || []).length) bits.push("source " + n.src.join(", "));
+        out.push("- " + (n.kind === "action" ? (n.status === "done" ? "[x] " : "[ ] ") : "") + n.text + " (" + n.id + (bits.length ? "; " + bits.join("; ") : "") + ")");
+      });
+    });
+    var sup = d.notes.filter(function(n){ return n.status === "superseded"; });
+    if (sup.length) { out.push("", "## Superseded", ""); sup.forEach(function(n){ out.push("- " + n.text + " (" + n.id + (n.superseded_by ? "; replaced by " + n.superseded_by : "") + ")"); }); }
+    out.push("", "## Transcript", "");
+    (d.transcript || []).forEach(function(l){ out.push("- " + l.id + " " + (l.at || "") + " " + l.speaker + ": " + l.text); });
+    return out.join("\n") + "\n";
+  }
+  function download(name, type, text){
+    var url = URL.createObjectURL(new Blob([text], {type: type}));
+    var a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 1000);
+  }
+  var base = (DATA.meta.id || "working-notes");
+  document.getElementById("x-md").addEventListener("click", function(){ download(base + ".md", "text/markdown", markdown()); });
+  document.getElementById("x-json").addEventListener("click", function(){ download(base + ".json", "application/json", JSON.stringify(merged(), null, 2)); });
+  document.getElementById("x-copy").addEventListener("click", function(){
+    var text = markdown();
+    function fallback(){ var t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); toast("Copied."); } catch (e) { toast("Copy failed; use Export Markdown."); } t.remove(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ toast("Copied."); }, fallback); else fallback();
+  });
+  var tt;
+  function toast(s){ var t = document.getElementById("toast"); t.textContent = s; t.hidden = false; clearTimeout(tt); tt = setTimeout(function(){ t.hidden = true; }, 2600); }
+
+  render();
+  if (/^#t-\d+$/.test(location.hash)) jump(location.hash.slice(1));
+})();
+</script>
+</body>
+</html>
