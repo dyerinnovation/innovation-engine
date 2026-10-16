@@ -9,6 +9,10 @@ Diagrams are worth keeping only if they are true and findable. This convention k
 diagram in one folder, makes it obvious which picture is today and which is the plan, and
 ties updates to the changes that make them stale.
 
+## Step 0: Resolve the design system
+
+If the design plugin is installed, run `design-system-resolution`. Otherwise: use the system the user names; else the project's own (a tokens or theme file, a design-system page, a brand skill); else plain neutral styling. Say in one line which one you used, and ask only when two or more are found.
+
 ## Pick the tool
 
 | Use | When |

@@ -31,6 +31,7 @@ from their descriptions when the moment fits.
 | `mcp-tool-design` | Designs MCP tools agents pick correctly: names, descriptions, honest annotations, scopes and safety. |
 | `test-strategy` | Picks the test layers for a change, including evals for model output, and what must pass before merge. |
 | `ui-test-walk` | Walks a UI change step by step at phone and desktop width, with screenshots and a severity-rated report. |
+| `app-docs` | Sets up self-maintaining docs: internal-docs for the team, external-docs for users, every fact tied to its source, with a staleness table. |
 
 The `swe` plugin also ships a `UserPromptSubmit` hook that reminds Claude to run
 `session-post-mortem` when you announce a compaction ("then I'll compact"). It only adds
@@ -46,6 +47,8 @@ context; it never blocks a prompt.
 | `prd-writing` | Writes requirements docs grounded in the code, with decisions in place and tagged acceptance criteria, plus a linter. |
 | `release-ladder` | Runs one tracker project per release with gate reviews, in GitHub, Linear or Jira. |
 | `architecture-diagrams` | Keeps current and target architecture diagrams side by side, readable and exported. |
+| `work-tracker` | Works your ticket system from Claude Code (GitHub Issues, Jira, Azure DevOps and more), with one best-practice file per platform. |
+| `working-notes-page` | Turns a live chat or meeting transcript into an HTML notes page: decisions, actions with owners, open questions, each linked to its source. |
 
 The `tpm` plugin also ships the `feedback-triage` filer agent.
 
@@ -54,6 +57,10 @@ The `tpm` plugin also ships the `feedback-triage` filer agent.
 | Skill | What it does |
 |---|---|
 | `brand-design-system` | Turns any brand into self-contained tokens, a brand guide with anti-patterns, and a specimen page. |
+| `design-system-resolution` | Step 0 of every visual skill: picks the design system to use (yours, the project's, or the engine default) and says which. |
+| `exec-deck` | Builds executive slides as HTML first, then converts them to editable PowerPoint, checked slide by slide as images. |
+| `chat-progress-feedback` | Design rules for chat and agent interfaces that never leave people staring at silence: visible steps, heartbeats, cancel. |
+| `shared-ai-canvas` | Point at the exact text you mean, ask the AI, and get a tracked suggestion on just that part, never a silent rewrite. |
 
 ## Requirements
 

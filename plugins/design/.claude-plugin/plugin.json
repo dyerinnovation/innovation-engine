@@ -1,11 +1,19 @@
 {
   "name": "design",
   "displayName": "Design",
-  "version": "0.1.0",
-  "description": "Turn any brand into a self-contained design-token set, brand guide and specimen page.",
-  "author": { "name": "Dyer Innovation Station L.L.C.", "url": "https://innovation.dyer-capital.com" },
+  "version": "0.2.0",
+  "description": "Design skills: turn any brand into a design-token set, resolve which design system every visual skill uses, build executive decks, and design AI interfaces that show progress and edit only what you point at.",
+  "author": {
+    "name": "Dyer Innovation Station L.L.C.",
+    "url": "https://innovation.dyer-capital.com"
+  },
   "homepage": "https://innovation.dyer-capital.com/skills/",
   "repository": "https://github.com/dyerinnovation/innovation-engine",
   "license": "MIT",
-  "keywords": ["design-system", "brand", "tokens", "css"]
+  "keywords": [
+    "design-system",
+    "brand",
+    "tokens",
+    "css"
+  ]
 }

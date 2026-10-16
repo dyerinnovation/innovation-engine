@@ -13,6 +13,10 @@ Template: `references/sprint-board-template.html`. It ships with a neutral palet
 plain text wordmark. Edit only the THEME TOKENS `:root` block and the `BOARD` config object
 at the top of the script.
 
+## Step 0: Resolve the design system
+
+If the design plugin is installed, run `design-system-resolution`. Otherwise: use the system the user names; else the project's own (a tokens or theme file, a design-system page, a brand skill); else the neutral default theme in this skill's template. Say in one line which one you used, and ask only when two or more are found.
+
 ## When to use
 
 - A person wants to watch parallel lanes (builders, reviewers, merges, deploys, test walks)
@@ -90,8 +94,8 @@ out otherwise.
 
 ## Theme it from your design system
 
-1. Read your design tokens: a design-system page, a `tokens.css` or `tokens.json`, or the
-   codebase theme file. The `design:brand-design-system` skill can produce one.
+1. Start from the system chosen in Step 0 (with the design plugin, its resolved-theme
+   contract). The `design:brand-design-system` skill can produce one if none exists.
 2. Map them into the THEME TOKENS block only: neutrals (ground, raised, sunken, line,
    control, ink, body, muted, faint) for light (`--l-*`) and dark (`--d-*`); brand, brand
    fill for white text, pressed; warning and danger text and tints; one dot color per

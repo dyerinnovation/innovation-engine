@@ -1,11 +1,21 @@
 {
   "name": "swe",
   "displayName": "Software Engineer",
-  "version": "0.1.0",
-  "description": "Skills for building with agents: model routing, a builder and reviewer loop, a dangling-work audit, a session post-mortem with its compaction hook, MCP tool design, test strategy, and UI test walks.",
-  "author": { "name": "Dyer Innovation Station L.L.C.", "url": "https://innovation.dyer-capital.com" },
+  "version": "0.2.0",
+  "description": "Skills for building with agents: model routing, a builder and reviewer loop, a dangling-work audit, a session post-mortem with its compaction hook, MCP tool design, test strategy, UI test walks, and self-maintaining app docs.",
+  "author": {
+    "name": "Dyer Innovation Station L.L.C.",
+    "url": "https://innovation.dyer-capital.com"
+  },
   "homepage": "https://innovation.dyer-capital.com/skills/",
   "repository": "https://github.com/dyerinnovation/innovation-engine",
   "license": "MIT",
-  "keywords": ["agents", "code-review", "git", "workflow", "mcp", "testing"]
+  "keywords": [
+    "agents",
+    "code-review",
+    "git",
+    "workflow",
+    "mcp",
+    "testing"
+  ]
 }

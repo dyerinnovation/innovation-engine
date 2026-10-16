@@ -27,6 +27,23 @@ lowercase kebab-case. Start from the skeletons in `template/`.
 
 Copy the folder to `.claude/skills/<slug>-design-system/` to use the guide as a skill.
 
+## The project's own brand skill
+
+Output from this skill is what `design-system-resolution` looks for as "the project's own
+brand skill" (rung 2 of its order), in `design-systems/<slug>/` or
+`.claude/skills/<slug>-design-system/`. To make that hand-off clean:
+
+- Keep the semantic aliases in `tokens.css` exactly as named in the template; resolution
+  maps them straight into its theme contract (`--color-accent-strong` becomes the fill for
+  white text).
+- Add a dark block (`@media (prefers-color-scheme: dark)` with the same alias names) when
+  the brand has dark values. Without one, resolution fills dark from the engine default
+  theme and says so.
+- Name the logo file path in section 6 of the guide when it is your own mark, so
+  resolution can pass it on. Leave it out for any brand you do not own.
+- If a project holds several brands, keep the `design-systems/README.md` index current and
+  mark the default one, so resolution does not have to ask.
+
 ## Procedure
 
 1. **Research the public brand, official sources first.**
