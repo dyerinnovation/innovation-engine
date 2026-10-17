@@ -155,33 +155,34 @@ details.fold[open]>summary{margin-bottom:10px}
     "started": "2030-03-02T15:00:00Z",
     "updated": "2030-03-02T15:12:00Z",
     "revision": 2,
-    "cursor": "t-0009"
+    "cursor": "t-0010"
   },
   "notes": [
-    { "id": "d-001", "kind": "decision", "text": "Search ships first as title-only search; full-text search waits for the next release.", "status": "open", "src": ["t-0003", "t-0004"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:04:00Z", "updated": "2030-03-02T15:04:00Z" },
-    { "id": "a-001", "kind": "action", "text": "Draft the empty-state copy for search with no results.", "owner": "Designer", "due": "2030-03-06", "status": "open", "src": ["t-0005"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:05:00Z", "updated": "2030-03-02T15:05:00Z" },
-    { "id": "a-002", "kind": "action", "text": "Measure search response time on the largest test account.", "owner": "unassigned", "status": "open", "src": ["t-0008"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:11:00Z", "updated": "2030-03-02T15:11:00Z" },
-    { "id": "q-001", "kind": "question", "text": "Should search include archived notes?", "status": "open", "src": ["t-0006"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:06:00Z", "updated": "2030-03-02T15:06:00Z" },
-    { "id": "q-002", "kind": "question", "text": "Who owns the response-time check?", "status": "open", "src": ["t-0008"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:11:00Z", "updated": "2030-03-02T15:11:00Z" },
-    { "id": "f-001", "kind": "fact", "text": "The largest test account holds about 40,000 notes.", "status": "open", "src": ["t-0007"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:09:00Z", "updated": "2030-03-02T15:09:00Z" },
-    { "id": "f-002", "kind": "fact", "text": "Release freeze starts on 2030-03-09.", "status": "superseded", "superseded_by": "f-003", "src": ["t-0002"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:02:00Z", "updated": "2030-03-02T15:10:00Z" },
-    { "id": "f-003", "kind": "fact", "text": "Release freeze moved to 2030-03-13.", "status": "open", "supersedes": "f-002", "src": ["t-0009"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:12:00Z", "updated": "2030-03-02T15:12:00Z" },
-    { "id": "p-mg2k1a", "kind": "fact", "text": "Search usage numbers from last quarter are in the analytics folder.", "status": "open", "src": [], "origin": "person", "rev": 2, "created": "2030-03-02T15:07:00Z", "updated": "2030-03-02T15:07:00Z" }
+    { "id": "d-t0004", "kind": "decision", "text": "Search ships first as title-only search; full-text search waits for the next release.", "status": "open", "src": ["t-0004", "t-0005"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:06:00Z", "updated": "2030-03-02T15:06:00Z" },
+    { "id": "a-t0006", "kind": "action", "text": "Draft the empty-state copy for search with no results.", "owner": "Designer", "due": "2030-03-04", "due_text": "by monday", "status": "open", "src": ["t-0006"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:06:00Z", "updated": "2030-03-02T15:06:00Z" },
+    { "id": "a-t0009", "kind": "action", "text": "Measure search response time on the largest test account.", "owner": "unassigned", "status": "open", "src": ["t-0009"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:12:00Z", "updated": "2030-03-02T15:12:00Z" },
+    { "id": "q-t0007", "kind": "question", "text": "Should search include archived notes?", "status": "open", "src": ["t-0007"], "origin": "agent", "rev": 1, "created": "2030-03-02T15:06:00Z", "updated": "2030-03-02T15:06:00Z" },
+    { "id": "q-t0009", "kind": "question", "text": "Who owns the response-time check?", "status": "open", "src": ["t-0009"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:12:00Z", "updated": "2030-03-02T15:12:00Z" },
+    { "id": "f-t0008", "kind": "fact", "text": "The largest test account holds about 40,000 notes.", "status": "open", "src": ["t-0008"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:12:00Z", "updated": "2030-03-02T15:12:00Z" },
+    { "id": "f-t0002", "kind": "fact", "text": "Release freeze starts on 2030-03-09.", "status": "superseded", "superseded_by": "f-t0010", "src": ["t-0002"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:06:00Z", "updated": "2030-03-02T15:12:00Z" },
+    { "id": "f-t0010", "kind": "fact", "text": "Release freeze moved to 2030-03-13.", "status": "open", "supersedes": "f-t0002", "src": ["t-0010"], "origin": "agent", "rev": 2, "created": "2030-03-02T15:12:00Z", "updated": "2030-03-02T15:12:00Z" },
+    { "id": "p-mg2k1a", "kind": "fact", "text": "Search usage numbers from last quarter are in the analytics folder.", "status": "open", "src": [], "origin": "person", "via": "capture", "rev": 2, "created": "2030-03-02T15:08:00Z", "updated": "2030-03-02T15:08:00Z" }
   ],
   "transcript": [
     { "id": "t-0001", "speaker": "Lead", "at": "00:00:05", "text": "Let's use the time on search." },
     { "id": "t-0002", "speaker": "Lead", "at": "00:01:10", "text": "Reminder, the release freeze is on the ninth." },
-    { "id": "t-0003", "speaker": "Engineer", "at": "00:02:40", "text": "Full-text search is a bigger job than it looks. Titles only is doable this release." },
-    { "id": "t-0004", "speaker": "Lead", "at": "00:03:15", "text": "Then we go with titles only now, full text next release." },
-    { "id": "t-0005", "speaker": "Designer", "at": "00:04:02", "text": "I'll draft the no-results empty state by Monday." },
-    { "id": "t-0006", "speaker": "Engineer", "at": "00:05:30", "text": "Open question, do archived notes show up in results?" },
-    { "id": "t-0007", "speaker": "Engineer", "at": "00:07:45", "text": "The biggest test account has around forty thousand notes." },
-    { "id": "t-0008", "speaker": "Lead", "at": "00:09:20", "text": "Someone should time search on that account before we commit." },
-    { "id": "t-0009", "speaker": "Lead", "at": "00:11:50", "text": "Update, the freeze moved to the thirteenth." }
+    { "id": "t-0003", "speaker": "Engineer", "at": "00:02:40", "text": "Full-text search is a bigger job than it looks." },
+    { "id": "t-0004", "speaker": "Engineer", "at": "00:02:40", "text": "Titles only is doable this release." },
+    { "id": "t-0005", "speaker": "Lead", "at": "00:03:15", "text": "Then we go with titles only now, full text next release." },
+    { "id": "t-0006", "speaker": "Designer", "at": "00:04:02", "text": "I'll draft the no-results empty state by Monday." },
+    { "id": "t-0007", "speaker": "Engineer", "at": "00:05:30", "text": "Open question, do archived notes show up in results?" },
+    { "id": "t-0008", "speaker": "Engineer", "at": "00:07:45", "text": "The biggest test account has around forty thousand notes." },
+    { "id": "t-0009", "speaker": "Lead", "at": "00:09:20", "text": "Someone should time search on that account before we commit." },
+    { "id": "t-0010", "speaker": "Lead", "at": "00:11:50", "text": "Update, the freeze moved to the thirteenth." }
   ],
   "log": [
-    { "t": "15:06", "msg": "Revision 1: 1 decision, 1 action, 1 question from t-0001 to t-0006." },
-    { "t": "15:12", "msg": "Revision 2: 1 action, 1 question, 2 facts; f-002 superseded by f-003." }
+    { "t": "2030-03-02T15:06:00Z", "rev": 1, "msg": "Revision 1: 1 decision, 1 action, 1 question, 1 fact from t-0001 to t-0007." },
+    { "t": "2030-03-02T15:12:00Z", "rev": 2, "msg": "Revision 2: 1 action, 1 question, 2 facts from t-0008 to t-0010; f-t0002 superseded by f-t0010; merged person note p-mg2k1a." }
   ]
 }
 </script>
@@ -257,6 +258,8 @@ details.fold[open]>summary{margin-bottom:10px}
   var lines = {};
   (DATA.transcript || []).forEach(function(l){ lines[l.id] = l; });
 
+  // Log times are stored as UTC ISO strings and shown as HH:MM UTC.
+  function logTime(t){ var m = /T(\d\d:\d\d)/.exec(t || ""); return m ? m[1] + " UTC" : (t || ""); }
   function el(tag, cls, text){ var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function safeHref(h){ return /^(https:\/\/|\.{0,2}\/|[\w.-]+\/|#)/.test(h || "") && !/^javascript:/i.test(h) ? h : null; }
 
@@ -290,7 +293,7 @@ details.fold[open]>summary{margin-bottom:10px}
       if (!n.owner || n.owner === "unassigned") o.textContent = "No owner yet";
       else { o.appendChild(document.createTextNode("Owner ")); o.appendChild(el("b", null, n.owner)); }
       m.appendChild(o);
-      if (n.due) m.appendChild(el("span", "tag", "Due " + n.due));
+      if (n.due || n.due_text) m.appendChild(el("span", "tag", "Due " + (n.due || n.due_text)));
     }
     if (n.answer) m.appendChild(el("span", "tag", "Answer: " + n.answer));
     if (n.supersedes) { var s = el("a", "src", "replaces " + n.supersedes); s.href = "#n-" + n.supersedes; s.addEventListener("click", openSup); m.appendChild(s); }
@@ -383,7 +386,7 @@ details.fold[open]>summary{margin-bottom:10px}
     if (ev) { tf.appendChild(document.createTextNode("Verbatim copy: ")); var a = el("a", null, meta.source.evidence); a.href = ev; tf.appendChild(a); }
 
     var log = document.getElementById("log"); log.textContent = "";
-    (DATA.log || []).slice().reverse().forEach(function(e){ var li = el("li"); li.appendChild(el("span", "mono", e.t + "  ")); li.appendChild(document.createTextNode(e.msg)); log.appendChild(li); });
+    (DATA.log || []).slice().reverse().forEach(function(e){ var li = el("li"); li.appendChild(el("span", "mono", logTime(e.t) + "  ")); li.appendChild(document.createTextNode(e.msg)); log.appendChild(li); });
   }
 
   // Capture bar
@@ -397,7 +400,7 @@ details.fold[open]>summary{margin-bottom:10px}
     if (!text) { msg.textContent = "Write the note first."; msg.hidden = false; return; }
     if (kind === "action" && !owner) { msg.textContent = "Every action needs an owner."; msg.hidden = false; ownerIn.focus(); return; }
     var now = new Date().toISOString();
-    var n = {id: "p-" + Date.now().toString(36), kind: kind, text: text, status: "open", src: [], origin: "person", rev: DATA.meta.revision, created: now, updated: now};
+    var n = {id: "p-" + Date.now().toString(36), kind: kind, text: text, status: "open", src: [], origin: "person", via: "capture", rev: DATA.meta.revision, created: now, updated: now};
     if (kind === "action") n.owner = owner;
     local.notes.push(n); save();
     document.getElementById("c-text").value = ""; ownerIn.value = "";
@@ -422,7 +425,7 @@ details.fold[open]>summary{margin-bottom:10px}
       items.forEach(function(n){
         var bits = [];
         if (n.kind === "action") bits.push("owner: " + (n.owner || "unassigned"));
-        if (n.due) bits.push("due " + n.due);
+        if (n.due || n.due_text) bits.push("due " + (n.due || n.due_text));
         if (n.status && n.status !== "open") bits.push(n.status);
         if (n.answer) bits.push("answer: " + n.answer);
         if ((n.src || []).length) bits.push("source " + n.src.join(", "));

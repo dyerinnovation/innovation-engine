@@ -11,6 +11,12 @@
      danger-fill (6.5:1). Never put white text on accent in dark mode; use
      accent-fill, which stays the same in both themes.
 
+   Filling gaps for a project source: when the project supplies only a light accent,
+   do not drop it in dark mode. Keep its hue, raise lightness until it reaches 4.5:1
+   on --d-bg, --d-surface and --d-sunken, and put that value in --d-accent (with a
+   matching --d-accent-tint), recorded under "derived" in the contract. The --d-accent
+   below is the fallback only when no shade of the project hue passes.
+
    Usage: paste this file into a page's <style>, then style with the semantic
    names (--color-*, --font-*, --space-*, --radius-*). Never use the raw --l-* or
    --d-* names in page CSS. data-theme="light" or "dark" on <html> forces a theme.

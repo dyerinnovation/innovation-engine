@@ -3,12 +3,19 @@
 An anchor is the exact quote the person selected plus a little text before and after it.
 Character offsets are stored only as hints and never decide where a change lands.
 
-Resolution order (stop at the first step that yields exactly one place):
-  1. exact match of the quote
-  2. among exact matches, the one whose before/after text matches
-  3. the recorded occurrence index, only if the occurrence count is unchanged
-  4. a whitespace- and punctuation-tolerant match (with the same context tie-break)
-Anything else is refused: not found, ambiguous, or spanning a non-text block.
+Candidates are the exact matches of the quote, or, when there are none, the matches that
+ignore whitespace runs and punctuation. The same rule then picks among them:
+  - When before/after text was recorded, it must agree, even for a single candidate.
+    The quote alone is not proof: if it had copies when selected, or a copy was pasted
+    later, a lone match can be the wrong copy.
+      * one candidate whose before and after text both fit wins;
+      * if none fit, a single candidate may stand on one fitting side only when the quote
+        was unique at selection (a neighbouring edit should not orphan it);
+      * otherwise refuse with context_mismatch.
+  - With no recorded context, a single candidate wins only if the quote was not a
+    duplicate when selected; among several, the recorded occurrence index is used only
+    if the count is unchanged.
+Refusals: empty_quote, not_found, ambiguous, context_mismatch, spans_non_text_block.
 
 Adapters flatten each medium (article, slides, script, timeline) into one string and put
 OBJECT_REPLACEMENT (U+FFFC) where a non-text block sits, so a match across it is refused.
@@ -16,6 +23,7 @@ Python 3.8+, standard library only.
 """
 
 import unicodedata
+from bisect import bisect_left
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
@@ -39,7 +47,8 @@ class Resolution:
     start: int = -1
     end: int = -1
     method: str = ""     # exact | context | occurrence | tolerant
-    reason: str = ""     # empty_quote | not_found | ambiguous | spans_non_text_block
+    reason: str = ""     # empty_quote | not_found | ambiguous | context_mismatch
+                         # | spans_non_text_block
 
 
 def make_anchor(doc: str, start: int, end: int, context: int = CONTEXT_CHARS) -> Anchor:
@@ -62,25 +71,14 @@ def resolve(doc: str, anchor: Anchor) -> Resolution:
     if OBJECT_REPLACEMENT in anchor.quote:
         return _refuse("spans_non_text_block")
 
-    exact = _find_all(doc, anchor.quote)
-    n = len(anchor.quote)
-    if len(exact) == 1:
-        return _place(doc, exact[0], exact[0] + n, "exact")
-    if len(exact) > 1:
-        spans = [(s, s + n) for s in exact]
-        by_context = _context_filter(doc, spans, anchor)
-        if len(by_context) == 1:
-            return _place(doc, by_context[0][0], by_context[0][1], "context")
-        if (anchor.occurrence is not None and anchor.occurrences == len(exact)
-                and 0 <= anchor.occurrence < len(exact)):
-            s = exact[anchor.occurrence]
-            return _place(doc, s, s + n, "occurrence")
-        return _refuse("ambiguous")
-
-    # 4. tolerant match: ignore whitespace runs and punctuation.
     norm_doc, index_map = _normalize_with_map(doc)
-    norm_quote, _ = _normalize_with_map(anchor.quote)
-    norm_quote = norm_quote.strip()
+    n = len(anchor.quote)
+    exact = _find_all(doc, anchor.quote)
+    if exact:
+        return _choose(doc, norm_doc, index_map, [(s, s + n) for s in exact], anchor, "exact")
+
+    # No exact copy: tolerant match that ignores whitespace runs and punctuation.
+    norm_quote = _normalize_with_map(anchor.quote)[0].strip()
     if not norm_quote:
         return _refuse("not_found")
     spans = []
@@ -89,12 +87,7 @@ def resolve(doc: str, anchor: Anchor) -> Resolution:
         spans.append((index_map[ns], index_map[ne] + 1))
     if not spans:
         return _refuse("not_found")
-    if len(spans) == 1:
-        return _place(doc, spans[0][0], spans[0][1], "tolerant")
-    by_context = _context_filter(doc, spans, anchor)
-    if len(by_context) == 1:
-        return _place(doc, by_context[0][0], by_context[0][1], "tolerant")
-    return _refuse("ambiguous")
+    return _choose(doc, norm_doc, index_map, spans, anchor, "tolerant")
 
 
 def apply_suggestion(doc: str, anchor: Anchor, replacement: str) -> Tuple[Optional[str], Resolution]:
@@ -136,19 +129,49 @@ def _find_all(haystack: str, needle: str) -> List[int]:
     return hits
 
 
-def _context_filter(doc: str, spans, anchor: Anchor):
-    """Keep spans whose surrounding text matches the stored before/after text."""
-    if not anchor.prefix and not anchor.suffix:
-        return []
+def _choose(doc, norm_doc, index_map, spans, anchor: Anchor, method: str) -> Resolution:
+    """Pick exactly one candidate span using the recorded context, or refuse."""
+    was_duplicate = (anchor.occurrences or 0) > 1
     want_pre = _normalize_with_map(anchor.prefix)[0].strip()
     want_suf = _normalize_with_map(anchor.suffix)[0].strip()
-    keep = []
-    for s, e in spans:
-        pre = _normalize_with_map(doc[max(0, s - len(anchor.prefix) - 8):s])[0].strip()
-        suf = _normalize_with_map(doc[e:e + len(anchor.suffix) + 8])[0].strip()
-        if pre.endswith(want_pre) and suf.startswith(want_suf):
-            keep.append((s, e))
-    return keep
+
+    if want_pre or want_suf:
+        fits = [_context_fit(norm_doc, index_map, s, e, want_pre, want_suf) for s, e in spans]
+        both = [sp for sp, (pre_ok, suf_ok) in zip(spans, fits) if pre_ok and suf_ok]
+        if len(both) == 1:
+            label = "context" if method == "exact" and len(spans) > 1 else method
+            return _place(doc, both[0][0], both[0][1], label)
+        if len(both) > 1:
+            return _refuse("ambiguous")
+        # Nothing fits on both sides. Only a quote that was unique when selected, and is
+        # still the only candidate, may survive an edit to one neighbouring side.
+        if len(spans) == 1 and not was_duplicate:
+            pre_ok, suf_ok = fits[0]
+            if (want_pre and pre_ok) or (want_suf and suf_ok):
+                return _place(doc, spans[0][0], spans[0][1], method)
+        return _refuse("context_mismatch")
+
+    # No context recorded: the quote and the occurrence count are all there is.
+    if len(spans) == 1 and not was_duplicate:
+        return _place(doc, spans[0][0], spans[0][1], method)
+    if (method == "exact" and anchor.occurrence is not None
+            and anchor.occurrences == len(spans) and 0 <= anchor.occurrence < len(spans)):
+        s, e = spans[anchor.occurrence]
+        return _place(doc, s, e, "occurrence")
+    return _refuse("ambiguous")
+
+
+def _context_fit(norm_doc, index_map, start, end, want_pre, want_suf):
+    """(prefix agrees, suffix agrees) for a raw span, compared in normalized text.
+
+    An empty recorded side always agrees. Comparing in normalized text means a changed
+    space or quote mark next to the selection does not count as different context.
+    """
+    ns = bisect_left(index_map, start)   # first normalized char at or after start
+    ne = bisect_left(index_map, end)     # first normalized char at or after end
+    pre_ok = norm_doc[:ns].rstrip().endswith(want_pre)
+    suf_ok = norm_doc[ne:].lstrip().startswith(want_suf)
+    return pre_ok, suf_ok
 
 
 def _is_punct(ch: str) -> bool:

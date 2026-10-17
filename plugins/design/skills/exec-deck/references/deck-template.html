@@ -67,12 +67,16 @@ ul.points li::before { content: ""; position: absolute; left: 0; top: .5em; widt
 .context { font-size: 1.7cqw; color: var(--color-text-soft); margin: 2cqw 0 0; max-width: 52ch; }
 
 /* comparison */
-.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5cqw; margin-top: 2.5cqw; }
+/* One column per option, 2 to 4, no edits needed: the grid sizes itself. */
+.cols { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2.5cqw; margin-top: 2.5cqw; }
 .col { background: var(--color-surface); border-radius: 8px; padding: 2.4cqw; border-top: .5cqw solid var(--color-rule); }
 .col[data-pick] { border-top-color: var(--color-accent); }
 .col h3 { font: 800 2cqw/1.15 var(--font-display); margin: 0 0 1cqw; }
 .col ul.points { margin-top: 1cqw; }
 .col ul.points li { font-size: 1.6cqw; }
+/* for / against lines use + and minus marks (same as the pptx), so they read in grayscale */
+.col ul.points li.for::before, .col ul.points li.against::before { content: "+"; background: none; width: auto; height: auto; top: 0; font-weight: 700; color: var(--color-good); }
+.col ul.points li.against::before { content: "\2212"; color: var(--color-risk); }
 .badge { display: inline-block; background: var(--color-accent-strong); color: var(--color-on-accent); font: 700 .95cqw/1 var(--font-body); padding: .6cqw 1cqw; border-radius: 999px; margin-bottom: 1cqw; letter-spacing: .06em; text-transform: uppercase; }
 
 /* timeline */
@@ -105,6 +109,11 @@ ul.points li::before { content: ""; position: absolute; left: 0; top: .5em; widt
   - Repeated items (columns, timeline steps, options) sit in an element with
     data-group; add data-pick to the recommended one.
   - Every number on a slide has a data-field="source" line saying where it came from.
+  - At most 3 list lines per slide, counting every card. One exception: a
+    comparison with up to 3 options gives each option one data-field="for"
+    line (class="for") and one data-field="against" line (class="against"),
+    so 6 lines at most and every option shows its trade-off. With 4 options,
+    one line each. A comparison takes 2 to 4 data-group columns with no CSS change.
 -->
 <main class="deck">
 
@@ -144,21 +153,29 @@ ul.points li::before { content: ""; position: absolute; left: 0; top: .5em; widt
 
   <section class="slide" data-layout="comparison">
     <p class="kicker" data-field="kicker">Options</p>
-    <h2 data-field="title">B is faster and cheaper than A</h2>
+    <h2 data-field="title">B is faster and cheaper than A or C</h2>
+    <!-- Options slide: one "for" and one "against" line per option, 3 options max. -->
     <div class="cols">
       <div class="col" data-group>
         <h3 data-field="head">A: hire a trainer</h3>
         <ul class="points">
-          <li data-field="point">Cost: 140k per year</li>
-          <li data-field="point">Ready in 4 months</li>
+          <li class="for" data-field="for">Expert from day one</li>
+          <li class="against" data-field="against">140k a year</li>
         </ul>
       </div>
       <div class="col" data-group data-pick>
         <span class="badge">Recommended</span>
         <h3 data-field="head">B: guided first week</h3>
         <ul class="points">
-          <li data-field="point">Cost: 30k one time</li>
-          <li data-field="point">Ready in 6 weeks</li>
+          <li class="for" data-field="for">30k once, 6 weeks</li>
+          <li class="against" data-field="against">Takes 2 team leads</li>
+        </ul>
+      </div>
+      <div class="col" data-group>
+        <h3 data-field="head">C: do nothing</h3>
+        <ul class="points">
+          <li class="for" data-field="for">No cost</li>
+          <li class="against" data-field="against">Still 18 days</li>
         </ul>
       </div>
     </div>

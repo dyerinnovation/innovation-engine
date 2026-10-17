@@ -40,8 +40,9 @@ has not seen. Copy first, propose moves, act only on approval.
 
 ## Things that often turn up
 
-- Secrets pasted into old docs. Do not copy the value; replace with a reference row in
-  `environments.md` and tell the owner the original still holds it.
+- Secrets pasted into old docs. Do not copy the value; point to the secret's row in
+  `environments.md` (an alias on the existing row if code already names it, a new row
+  only for a distinct secret) and tell the owner the original still holds it.
 - Hosts and endpoints scattered across many files. Move them into `environments.md` once
   and replace each mention with a pointer to the row.
 - Post-mortems under `docs/post-mortems/`. Copy them into `docs/internal-docs/post-mortems/`

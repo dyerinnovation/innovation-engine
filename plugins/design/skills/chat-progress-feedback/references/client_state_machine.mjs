@@ -9,14 +9,20 @@
 //   - Acknowledge at once: state becomes "thinking" before the request is even sent.
 //   - Every tool step that starts is closed, even if the stream ends badly.
 //   - Silence timer (lostAfterMs): reset by EVERY event, heartbeats included.
-//   - Progress timer (stillWorkingAfterMs): reset only by visible progress, not heartbeats.
+//   - Progress timer: reset only by visible progress (tool_progress included), not heartbeats.
+//     Its threshold is relative to the current step: max(stillWorkingAfterMs, the step's
+//     expected_s from tool_start). A step that normally takes 20 s should not show "still
+//     working" on every turn; only a step running past its normal length should.
+//   - No total timeout anywhere: no AbortSignal.timeout, no setTimeout(() => abort()). A long
+//     turn that keeps sending events must be allowed to finish. The only abort paths are the
+//     silence timer, a terminal event, and the person pressing Stop.
 //   - Cancel is always available while the turn runs.
 //
 // Run directly for a quick check against the reference server:
 //   node client_state_machine.mjs http://127.0.0.1:8787 "your question" [cancelAfterMs]
 
 export const DEFAULTS = {
-  stillWorkingAfterMs: 8000, // starting default, tune per product
+  stillWorkingAfterMs: 8000, // floor; a step's expected_s raises it for that step
   lostAfterMs: 45000,        // must be well above the server heartbeat interval
 };
 
@@ -36,6 +42,7 @@ export function createTurn({ baseUrl, onChange, options = {} }) {
   };
   let silenceTimer = null;
   let progressTimer = null;
+  let expectedMs = 0; // the running step's normal length, from tool_start.expected_s
 
   const emit = () => onChange && onChange({ ...view, steps: view.steps.map((s) => ({ ...s })) });
 
@@ -50,7 +57,8 @@ export function createTurn({ baseUrl, onChange, options = {} }) {
   function armProgress() {
     clearTimeout(progressTimer);
     if (view.stillWorking) { view.stillWorking = false; }
-    progressTimer = setTimeout(() => { view.stillWorking = true; emit(); }, opts.stillWorkingAfterMs);
+    const after = Math.max(opts.stillWorkingAfterMs, expectedMs);
+    progressTimer = setTimeout(() => { view.stillWorking = true; emit(); }, after);
   }
 
   function set(state, step) {
@@ -78,6 +86,9 @@ export function createTurn({ baseUrl, onChange, options = {} }) {
       emit();
       return;
     }
+    // Track the running step's expected length before re-arming the progress timer.
+    if (type === 'tool_start') expectedMs = Number(data.expected_s) > 0 ? Number(data.expected_s) * 1000 : 0;
+    else if (type === 'tool_end' || type === 'text' || type === 'thinking') expectedMs = 0;
     armProgress(); // a real progress event
     switch (type) {
       case 'ack': view.turnId = data.turn_id; break;
@@ -85,6 +96,9 @@ export function createTurn({ baseUrl, onChange, options = {} }) {
       case 'tool_start':
         view.steps.push({ id: data.id, label: data.label || data.name, status: 'running' });
         set('tool', data.label || data.name);
+        break;
+      case 'tool_progress':
+        if (data.note) view.step = `${(view.steps.find((x) => x.id === data.id) || {}).label || ''} ${data.note}`.trim();
         break;
       case 'tool_end': {
         const s = view.steps.find((x) => x.id === data.id);

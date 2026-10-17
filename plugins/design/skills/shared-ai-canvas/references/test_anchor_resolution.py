@@ -99,5 +99,82 @@ class ApplyRechecks(unittest.TestCase):
         self.assertFalse(change_is_confined(before, "alpha BETA gamma.", s, e))
 
 
+GUIDE = (
+    "# Setup guide\n"
+    "Welcome. Your first week is about setup.\n"
+    "Install the tool and sign in. Then add the plugins.\n"
+    "Ask a teammate for access to the test dashboard.\n"
+    "Install the tool and sign in again once the network is up.\n"
+)
+DUP = "Install the tool and sign in"
+SECOND_LINE = "Install the tool and sign in again once the network is up.\n"
+
+
+def second_copy_anchor(doc=GUIDE):
+    start = doc.rindex(DUP)
+    return make_anchor(doc, start, start + len(DUP))
+
+
+class ContextMustAgree(unittest.TestCase):
+    """The recorded before/after text must fit, not only break ties between copies."""
+
+    def test_duplicate_deleted_refuses_instead_of_editing_other_copy(self):
+        edited = GUIDE.replace(SECOND_LINE, "")
+        new_doc, r = apply_suggestion(edited, second_copy_anchor(), "REWRITE")
+        self.assertIsNone(new_doc)
+        self.assertEqual(r.reason, "context_mismatch")
+
+    def test_duplicate_deleted_plus_whitespace_change_refuses_tolerant_match(self):
+        edited = GUIDE.replace(SECOND_LINE, "").replace("Install the tool", "Install  the tool")
+        new_doc, r = apply_suggestion(edited, second_copy_anchor(), "REWRITE")
+        self.assertIsNone(new_doc)
+        self.assertEqual(r.reason, "context_mismatch")
+
+    def test_duplicate_added_above_context_picks_original(self):
+        a = second_copy_anchor()
+        edited = GUIDE.replace("Welcome.", "Welcome. Install the tool and sign in first.")
+        r = resolve(edited, a)
+        self.assertTrue(r.ok)
+        self.assertEqual(r.method, "context")
+        self.assertEqual(r.start, edited.rindex(DUP))
+
+    def test_occurrence_index_not_trusted_when_context_fails(self):
+        # Same count as at selection, but the selected copy was replaced by a new one.
+        a = second_copy_anchor()
+        edited = GUIDE.replace(SECOND_LINE, "").replace(
+            "Welcome.", "Welcome. Install the tool and sign in first.")
+        self.assertEqual(resolve(edited, a).reason, "context_mismatch")
+
+    def test_unique_quote_survives_edit_on_one_side(self):
+        start = DOC.index("Sign-ups doubled")
+        a = make_anchor(DOC, start, start + len("Sign-ups doubled"))
+        edited = DOC.replace("in a week.", "within seven days.")
+        r = resolve(edited, a)
+        self.assertTrue(r.ok)
+        self.assertEqual(edited[r.start:r.end], "Sign-ups doubled")
+
+    def test_unique_quote_moved_to_new_surroundings_refuses(self):
+        start = DOC.index("Sign-ups doubled")
+        a = make_anchor(DOC, start, start + len("Sign-ups doubled"))
+        edited = "Pricing changed. Sign-ups doubled for the paid plan only."
+        self.assertEqual(resolve(edited, a).reason, "context_mismatch")
+
+    def test_respaced_selected_copy_with_untouched_twin_is_refused_by_design(self):
+        # Known false refusal: exact matches are tried first, so the untouched twin is the
+        # only candidate; its context does not fit, so the request is refused rather than
+        # found on the re-spaced copy the person selected. Safe side, not a bug.
+        a = second_copy_anchor()
+        respaced = DUP.replace("Install the tool", "Install  the tool")
+        edited = GUIDE.replace(SECOND_LINE, SECOND_LINE.replace(DUP, respaced))
+        self.assertEqual(edited.count(DUP), 1)
+        new_doc, r = apply_suggestion(edited, a, "REWRITE")
+        self.assertIsNone(new_doc)
+        self.assertEqual(r.reason, "context_mismatch")
+
+    def test_duplicate_without_context_refuses_when_one_copy_left(self):
+        a = Anchor(quote="ok", occurrence=1, occurrences=2)
+        self.assertEqual(resolve("ok then.", a).reason, "ambiguous")
+
+
 if __name__ == "__main__":
     unittest.main()
