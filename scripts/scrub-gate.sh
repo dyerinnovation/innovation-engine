@@ -5,7 +5,7 @@
 # (example.com/org/net and the project contact address allowed), em dashes, and italics markers.
 # Private checks: scripts/scrub-patterns.local, one case-insensitive Perl regex per line
 # (blank lines and # comments ignored). That file is git-ignored; keep product names,
-# hosts and people there.
+# hosts and people there. Prefix a line with "except=<path> " to skip files under that path.
 #
 # Usage: scripts/scrub-gate.sh [root]   (exit 0 = clean, 1 = hits)
 set -euo pipefail
@@ -29,7 +29,7 @@ my @pub = (
 my @priv;
 if (-f $ENV{SCRUB_LOCAL}) {
   open my $fh, "<:encoding(UTF-8)", $ENV{SCRUB_LOCAL} or die;
-  while (<$fh>) { chomp; next if /^\s*(#|$)/; push @priv, ["private", qr{$_}i]; }
+  while (<$fh>) { chomp; next if /^\s*(#|$)/; my $skip = s/^except=(\S+)\s+// ? $1 : undef; push @priv, ["private", qr{$_}i, $skip]; }
 }
 my $contact = join(q{}, q{opensource-innovation}, chr(64), q{dy}, q{er-capital.com});
 my $hits = 0;
@@ -41,6 +41,7 @@ for my $f (@ARGV) {
     $line =~ s/\Q$contact\E//g;   # the published project contact address
     if ($md && $line =~ /^\s*(```|~~~)/) { $fence = !$fence; }
     for my $p (@pub, @priv) {
+      next if defined $p->[2] && index($rel, $p->[2]) == 0;
       if ($line =~ $p->[1]) { print "$p->[0]: $rel:$.: $orig"; $hits++; }
     }
     if ($md && !$fence) {
