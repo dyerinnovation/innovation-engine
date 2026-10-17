@@ -40,7 +40,8 @@ A chunk is each new turn in live chat mode, each paste, or each new set of lines
 growing transcript file (read from `meta.cursor`).
 
 1. Save the chunk verbatim to the evidence folder first.
-2. Split it into transcript lines (`t-0001` onward) and append them.
+2. Split it into transcript lines (`t-0001` onward), one per sentence, and append them.
+   Use the exact splitting rule in the schema so reruns give the same ids.
 3. Classify every idea in the chunk and file it:
 
 | Kind | File it when someone | Example |
@@ -52,23 +53,42 @@ growing transcript file (read from `meta.cursor`).
 
    Small talk and filler stay in the transcript only. A question answered later is set to
    `answered` with the answer and its line added to `src`.
-4. Merge by the rule in `references/data-schema.md`: stable ids, never delete, mark
-   superseded, person notes win.
-5. Bump `revision`, move `cursor`, add one log line, and rewrite only the JSON block.
-6. Reply in one line: what was filed ("2 actions, 1 decision; f-002 superseded").
+4. Dedupe the new notes against each other and the page (schema, Dedupe): one idea gets
+   one note of one kind, with all its lines in `src`.
+5. Merge by the rule in `references/data-schema.md`: never delete, mark superseded,
+   person notes win. A new agent note's id is its kind letter plus its first source line
+   (`f-t0007`), so ids match across runs and merges, unlike a counter that depends on
+   filing order.
+6. Bump `revision`, give this revision its own fresh UTC time (on `meta.updated`, the log
+   line and the notes it touched; never shared with another revision), move `cursor`, and
+   rewrite only the JSON block.
+7. Reply in one line: what was filed ("2 actions, 1 decision; f-t0002 superseded").
 
 Classify with the strongest or mid-tier model class in the main session; never hand
 meaning to a small model.
 
 ## Note rules
 
-- One idea per note. Split "we chose X and the designer will do Y" into a decision and an action.
+- One idea, one note. Split "we chose X and the designer will do Y" into a decision and an
+  action, but never file one idea twice: a problem with a fix is just the action, and
+  "check with X" is a question or an action, not both. Duplicates make counts and the
+  open list lie.
 - Plain words, the speaker's meaning, no filler. One or two sentences.
 - An owner on every action. If none was named: owner `unassigned`, plus a question
   "Who owns X?".
 - A source link on every agent note: the transcript line ids it came from.
-- Never invent an owner, a date or a decision the transcript does not hold.
+- Never invent. An owner, a date, an answer, `done` or `answered` needs a line that says
+  so. "Who owns X?" stays open until someone is named; an unowned action stays
+  `unassigned`, even if it seems finished. A wrong "done" is worse than an open item.
+- Due dates: `due` is an ISO date only when the line gives a resolvable date ("Friday"
+  against the meeting date); otherwise put the words in `due_text`. All stored times are UTC.
 - No secrets: redact keys, passwords and tokens to `<redacted>` in notes and transcript.
+
+## A note the person dictates in chat
+
+When the person says "add a note: ..." in chat, stand in for the capture bar: file it as a
+person note (`p-` id, `origin: person`, `via: chat`, no `src`), log it, and treat it as
+theirs from then on, so later merges never rewrite it. Details: schema merge step 7.
 
 ## Pairs with feedback-triage
 
@@ -94,4 +114,12 @@ appending each chunk under `## Raw`. The page links that file; each note links i
 
 - The JSON block parses, and every `src` id exists in `transcript`.
 - No note was removed and no person note changed (compare ids and texts with the read).
+- No two live notes say the same thing; no `due` that is not an ISO date; no `answered`
+  or `done` without a source line or a person behind it.
+- Agent note ids follow the first-source-line rule; each revision's time is unique and
+  later than the one before.
 - Open the page once at desktop and phone width: sections render and a source chip jumps.
+  Use a headless browser and send every file it writes (screenshots, snapshots, console
+  logs) into the output folder, for example `<notes folder>/preview/`, or into a temp
+  dir you delete afterwards. Never the repo root or a browser tool's default folder:
+  stray preview files end up committed or mistaken for evidence.

@@ -30,16 +30,28 @@ Project facts:
 3. Read `docs/internal-docs/environments.md` for any host, endpoint or resource name. Never
    copy a value into an external doc unless it is a public URL listed there as public.
 4. Write or update the doc. Each fact must trace to a source just read. If a fact is
-   missing, write `TODO(source needed): <what>` instead of guessing.
-5. Set `last-verified` to today and the current short commit, only for docs whose sources
-   were all re-read.
+   missing, write `TODO(source needed): <what>` instead of guessing. Examples are facts
+   too: headers, content types, status codes and sample values come from the code, a
+   schema or a test fixture, or become a placeholder plus a TODO. Old prose docs are
+   leads only: verify them in code or config, or mark the fact
+   `(from legacy doc <path>, unverified)` and report it.
+5. Set `last-verified` to exactly `YYYY-MM-DD @ <short-sha>` (today, `git rev-parse
+   --short HEAD`), only for docs whose sources were all re-read. If any source has
+   uncommitted changes, write `@ <short-sha>+dirty`. No other text in that field; put
+   notes in the report.
 6. If a new doc or source was added, add or update its row in the staleness table.
 7. Report: docs written, docs confirmed unchanged, TODOs left, and any doc whose sources no
    longer exist.
 
 ## Release notes
 
-- One file per release: `docs/external-docs/release-notes/<version>.md`.
+- Convention: `{{changelog file, or one file per release in a folder}}`. Keep it.
+- Unreleased changes go in: `{{one changelog: the "## Unreleased" heading at the top of
+  that file; one file per version: the single file named like its siblings with
+  "unreleased" for the version, for example release-notes-unreleased.md}}`. Append to it;
+  never start a second Unreleased place.
+- At release: `{{rename the heading to the version | rename the file and its title to the
+  version}}`. Never guess a version number.
 - Source: merged changes since the last release tag, read from the commits and the code,
   not from ticket titles alone.
 - Only user-visible changes. Group by: New, Improved, Fixed. Internal-only changes go in an

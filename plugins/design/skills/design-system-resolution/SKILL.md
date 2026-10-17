@@ -30,12 +30,26 @@ Stop at the first rung that gives an answer.
 
 - **One clear answer: do not ask.** Say in one line which system you used, for example
   "Theme: project tokens from `web/src/theme.css` (dark filled from the default)."
-- **Two or more candidates on the same rung: ask once**, listing each with its path, and
-  recommend the one closest to the thing being made (the app's own theme for an app page).
+- **Two or more candidates on the same rung: ask once**, listing each with its path. This
+  includes a light-only source next to a dark-only one: treat them as rivals, not halves of
+  one system, because their hues, type and authors usually differ. Treat sources as one
+  system (no question) only when the project says so: one file imports or references the
+  other, the values agree, or a doc or config names them together.
+- **Recommend deterministically** so repeat runs agree. Prefer, in order: the source the
+  app actually loads (imported by the entry stylesheet, config or code); then a structured
+  token file over loose CSS; then the more complete set (more contract groups filled).
+  Proceed with the recommendation if no answer comes, and say so.
 - **Another company's brand that is not on file: ask once** whether to extract it with
   `brand-design-system` first or to use the default theme for now. Never guess a
   third-party palette from memory.
 - **Nothing found: use the default** and say so in the same one line.
+
+## Where the notice goes
+
+The one-line notice goes in your reply to the person, every time; that is where they can
+correct it. Put it in the artifact too (a small footer line or an HTML comment) only when
+the artifact is meant to be shared or published, so a later reader knows where the colors
+came from. A private working page does not need it on the page.
 
 ## Procedure
 
@@ -46,9 +60,19 @@ Stop at the first rung that gives an answer.
    carry white text, type stacks with fallbacks, spacing, radius, logo, provenance.
 4. Fill every missing group from the default theme and list it in `gaps`.
 5. Check contrast: text tokens at 4.5:1 on every ground in their theme, white text only
-   on fills that reach 4.5:1. If a source token fails, darken or lighten it, keep the
-   hue, and note the change in provenance.
-6. Return the contract and the one-line notice to the calling skill.
+   on fills that reach 4.5:1. If a source token fails, keep its hue and change only its
+   lightness until it passes (lighter on dark grounds, darker on light ones), record the
+   derived value in `derived` with its source and ratio, and keep the brand recognizable.
+   Fall back to the default theme's token only when no shade of that hue passes while
+   still reading as the hue. See "Contrast fixes" in `references/theme-contract.md`.
+   Also check each text color on its own tint (accent text on `accent_tint`, as in chips
+   and badges), measured against the tint laid over the ground it sits on. A text color
+   that passes on the plain ground can fail on its tint, because the tint pulls the
+   background toward the text. If it fails, move the text further from the ground (darker
+   in light, lighter in dark) or thin the tint, until it reaches 4.5:1, and record it in
+   `derived`. Worked example in "Text on its own tint" in the contract reference.
+6. Return the contract and the one-line notice to the calling skill. Say the notice in your
+   reply; put it on the page only when the page is shared or published (see below).
 
 ## Rules
 

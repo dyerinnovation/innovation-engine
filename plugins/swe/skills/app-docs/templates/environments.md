@@ -37,8 +37,15 @@ them.
 
 ## Secret references
 
-| Environment | Secret name | Stored in | Used by | Rotated by |
-|---|---|---|---|---|
-| production | {{SECRET_NAME}} | {{secret manager and path, or CI secret name}} | {{service}} | `internal-docs/runbooks/{{runbook}}.md` |
+One row per secret. The name in code or config (the env var, the secret manager key) is
+the row; every other name for the same secret goes in `Aliases`. A legacy doc that says
+"the DB password is in the vault" next to a `DATABASE_URL` secret adds an alias to that
+row, marked `(from legacy doc docs/x.md, unverified)`, not a new row. Add a row only when
+code or config shows a distinct secret. Unsure whether two names are one secret: keep one
+row, alias the other, and ask in the report.
+
+| Environment | Secret name | Aliases | Stored in | Used by | Rotated by |
+|---|---|---|---|---|---|
+| production | {{SECRET_NAME}} | {{other names, or none}} | {{secret manager and path, or CI secret name}} | {{service}} | `internal-docs/runbooks/{{runbook}}.md` |
 
 Never a value, a partial value, or a hint at one.

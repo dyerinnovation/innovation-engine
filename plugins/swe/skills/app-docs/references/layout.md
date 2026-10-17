@@ -16,7 +16,7 @@ docs/
   external-docs/             # people who use the app
     help/                    # task pages: how do I ...
     guides/                  # longer walkthroughs
-    release-notes/           # one file per release
+    release-notes/           # CHANGELOG.md, newest first, ## Unreleased at the top
     api/                     # endpoint and SDK reference
 ```
 
@@ -44,7 +44,7 @@ sources:                  # files this doc is true about; the writer reads all o
   - src/auth/routes.ts
   - config/email-templates/reset.html
 environments: [production] # optional; names rows in internal-docs/environments.md
-last-verified: 2026-01-15 @ a1b2c3d   # date and short commit of the sources read
+last-verified: 2026-01-15 @ a1b2c3d   # strict format, see below
 owner: update-help-docs   # the skill that maintains it
 ---
 ```
@@ -54,6 +54,22 @@ Rules:
 - `sources` lists files or globs in the repo, never URLs to a wiki.
 - A doc with no `sources` is a draft and says so in its title line.
 - `last-verified` changes only when the writer re-read every source at that commit.
+
+## The `last-verified` format
+
+Exactly one of:
+
+| Value | Meaning |
+|---|---|
+| `2026-01-15 @ a1b2c3d` | every source was read on that date, clean, at that commit (`git rev-parse --short HEAD`) |
+| `2026-01-15 @ a1b2c3d+dirty` | read at that commit, but at least one source had uncommitted changes (`git status --porcelain -- <sources>` was not empty) |
+| empty | never verified (a migrated copy, a fresh draft) |
+
+Pattern: `^\d{4}-\d{2}-\d{2} @ [0-9a-f]{7,40}(\+dirty)?$`. No parentheses, no "plus the
+local change", no second date: the staleness check parses this field, and free text makes
+it fail or, worse, skip the doc. Anything worth saying about how a doc was verified goes in
+the run report. A `+dirty` doc is re-verified after the change is committed, then written
+again without the marker.
 
 ## Setup command sequence
 

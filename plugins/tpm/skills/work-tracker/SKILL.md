@@ -80,6 +80,24 @@ Each reference maps these to exact commands.
 | Link a pull request | Prefer the platform's native link (keyword in the PR, branch name); fall back to an explicit link |
 | Search | By text, label, state or assignee in the platform's query language |
 
+When you write commands or a plan:
+
+- **Derive, do not placeholder.** Capture runtime values (item type, ids, UUIDs, state
+  names) into shell variables from a read call, and URL-encode any that go into a URL path;
+  type names like "User Story" contain spaces. Only the org, project, token and the values
+  the user gave should be filled by hand.
+- **Stop on an empty derived value.** A failed token, a typo or a missing item makes a
+  read return nothing, and the next command then runs with a hole in it (a WIQL
+  `NOT IN ()`, a URL with no type, a mutation with no issue id) and fails far from the
+  cause or does the wrong thing. After each derived value, check it is non-empty; if it
+  is empty, stop and report which value and which call, instead of passing it on. The
+  references define a `need` helper for this.
+- **Take the simplest path that does the whole job.** If the CLI can move and comment in
+  one call, use it; keep the API for what the CLI cannot do (reading the process, states,
+  transitions).
+- **Verify a write by the id it returned**, or by exact text with an explicit sort order,
+  never by assuming the newest entry is first.
+
 Write actions (create, comment, move, link, close) change shared state that other people
 watch. Confirm the target item and the exact change with the user before the first write in
 a session, unless they already asked for that exact change.
